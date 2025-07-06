@@ -64,9 +64,9 @@ const receiverProxy = createProxyMiddleware({
 // Use the proxy for receiver requests
 app.use('/api/receiver', receiverProxy);
 
-// Serve the advanced HTML file as main
+// Serve the main HTML file
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index-advanced.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Health check endpoint
