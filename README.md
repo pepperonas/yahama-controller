@@ -1,4 +1,4 @@
-# Yamaha RX-V577 Advanced Control Server
+# Yamaha RX-V577 Advanced Control
 
 Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V577 AV-Receivers mit erweiterten Funktionen und modernem Dark Theme Interface.
 
@@ -36,8 +36,8 @@ Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V57
 
 ```bash
 # Repository klonen
-git clone https://github.com/pepperonas/yahama-server.git
-cd yahama-server
+git clone https://github.com/your-username/yahama-amp.git
+cd yahama-amp
 
 # Dependencies installieren
 npm install
@@ -63,8 +63,8 @@ pm2 save
    ```
 
 3. **Anwendung öffnen**:
-   - Browser: `http://localhost:3000`
-   - Netzwerk: `http://[RaspberryPI-IP]:3000`
+   - Browser: `http://localhost:5001`
+   - Netzwerk: `http://[RaspberryPI-IP]:5001`
 
 4. **Find Your Receiver's IP Address**:
    - Check your router's admin panel for connected devices
@@ -74,42 +74,42 @@ pm2 save
 5. **Connect to Receiver**:
    - Enter the receiver's IP address in the connection panel
    - Click "Connect" to establish connection
-   - The IP address will be saved for future use
+   - The IP address will be saved in `receiver-config.json` for future use
 
-### Method 2: Direct Browser Access (May Have CORS Issues)
+### Alternative: Direct Browser Access (May Have CORS Issues)
 
-1. **Basic Version**:
-   - Open `index.html` in your web browser (basic controls)
+1. **Direct Access**:
+   - Open `index.html` in your web browser
    - No installation required, but may encounter CORS restrictions
 
-2. **Advanced Version**:
-   - Open `index-advanced.html` for full feature set
-   - Requires Node.js server for CORS proxy
-
-3. **If CORS Issues Occur**:
-   - Use Method 1 (Node.js server) instead
+2. **If CORS Issues Occur**:
+   - Use Node.js server method (recommended) instead
    - Or run a local web server: `python -m http.server 8000`
 
 ## Projektstruktur
 
 ```
-yahama-server/
-├── index.html              # Haupt-Interface (Advanced Version)
-├── index-advanced.html     # Erweiterte Steuerung (Backup)
-├── server.js              # Express.js Server mit CORS Proxy
-├── package.json           # Node.js Dependencies
-├── deploy-raspi.sh        # Deployment-Script für Raspberry Pi
-├── .gitignore            # Git-Ignore-Regeln
-└── README.md             # Diese Dokumentation
+yahama-amp/
+├── index.html              # Haupt-Interface mit Advanced Controls
+├── server.js               # Express.js Server mit CORS Proxy
+├── package.json            # Node.js Dependencies
+├── receiver-config.json    # Gespeicherte Receiver-IP-Adresse
+├── deploy-raspi.sh         # Deployment-Script für Raspberry Pi
+├── favicon.*               # Favicon-Dateien (verschiedene Größen)
+├── android-chrome-*.png    # Android App Icons
+├── apple-touch-icon.png    # iOS App Icon
+└── README.md              # Diese Dokumentation
 ```
 
 ## Technische Spezifikationen
 
 - **Server**: Node.js mit Express.js
-- **Proxy**: HTTP-Proxy-Middleware für CORS-Handling
-- **Port**: 3000 (Standard)
+- **Dependencies**: Express, CORS, HTTP-Proxy-Middleware
+- **Port**: 5001 (Standard)
 - **Netzwerk**: Läuft auf 0.0.0.0 für Netzwerkzugriff
 - **Process Manager**: PM2 für Produktionsumgebung
+- **Interface**: Single Page Application mit Dark Theme
+- **Config**: Automatische IP-Speicherung in JSON-Datei
 
 ## Usage
 
