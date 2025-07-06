@@ -32,6 +32,14 @@
       <meta name="theme-color" content="#2B2E3B">
       <meta name="color-scheme" content="dark">
 
+      <!-- Favicon -->
+      <link rel="icon" type="image/x-icon" href="/favicon.ico">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+      <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+
       <style>
           :root {
               /* Farbschema */
@@ -1044,7 +1052,23 @@
                   this.elements.hdmiControl.addEventListener('change', (e) => this.setHDMIControl(e.target.value));
               }
 
-              loadSavedIP() {
+              async loadSavedIP() {
+                  try {
+                      // First check server for saved IP
+                      const response = await fetch('/api/health');
+                      const data = await response.json();
+                      
+                      if (data.receiverIP) {
+                          this.elements.ipInput.value = data.receiverIP;
+                          // Auto-connect if IP is saved on server
+                          setTimeout(() => this.connect(), 1000);
+                          return;
+                      }
+                  } catch (error) {
+                      console.log('No saved IP on server, checking localStorage');
+                  }
+                  
+                  // Fallback to localStorage
                   const savedIP = localStorage.getItem('yamaha-receiver-ip');
                   if (savedIP) {
                       this.elements.ipInput.value = savedIP;

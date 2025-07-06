@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -12,8 +13,35 @@ app.use(cors());
 // Serve static files from current directory
 app.use(express.static(path.join(__dirname)));
 
-// Store receiver IP (in production, this could be in a database)
-let receiverIP = null;
+// Config file path
+const CONFIG_FILE = path.join(__dirname, 'receiver-config.json');
+
+// Load receiver IP from file
+function loadReceiverIP() {
+    try {
+        if (fs.existsSync(CONFIG_FILE)) {
+            const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
+            return config.receiverIP || null;
+        }
+    } catch (error) {
+        console.error('Error loading receiver IP:', error);
+    }
+    return null;
+}
+
+// Save receiver IP to file
+function saveReceiverIP(ip) {
+    try {
+        const config = { receiverIP: ip };
+        fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+        console.log(`Receiver IP saved to file: ${ip}`);
+    } catch (error) {
+        console.error('Error saving receiver IP:', error);
+    }
+}
+
+// Store receiver IP (loaded from file)
+let receiverIP = loadReceiverIP();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -32,6 +60,7 @@ app.post('/api/set-receiver-ip', (req, res) => {
     }
     
     receiverIP = ip;
+    saveReceiverIP(ip);
     console.log(`Receiver IP set to: ${receiverIP}`);
     res.json({ success: true, ip: receiverIP });
 });
@@ -81,4 +110,7 @@ app.get('/api/health', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Yamaha Receiver Control Server running on port ${PORT}`);
     console.log(`Open http://localhost:${PORT} in your browser`);
+    if (receiverIP) {
+        console.log(`Loaded receiver IP from config: ${receiverIP}`);
+    }
 });
