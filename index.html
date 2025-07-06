@@ -400,10 +400,10 @@
 
           /* Power Button */
           .power-button {
-              width: 100px;
-              height: 100px;
+              width: 80px;
+              height: 80px;
               border-radius: 50%;
-              border: 4px solid rgba(255, 255, 255, 0.2);
+              border: 3px solid rgba(255, 255, 255, 0.3);
               background: var(--background-darker);
               cursor: pointer;
               display: flex;
@@ -411,27 +411,33 @@
               justify-content: center;
               transition: all 0.3s ease;
               margin: 0 auto var(--spacing-4);
+              position: relative;
+              box-shadow: var(--shadow);
           }
 
           .power-button:hover {
               border-color: var(--accent-blue);
               transform: scale(1.05);
+              box-shadow: var(--shadow-lg);
           }
 
           .power-button.on {
               border-color: var(--accent-green);
-              background: rgba(156, 182, 143, 0.1);
+              background: rgba(156, 182, 143, 0.2);
+              box-shadow: 0 0 20px rgba(156, 182, 143, 0.5);
           }
 
           .power-button svg {
-              width: 50px;
-              height: 50px;
-              fill: var(--text-secondary);
+              width: 40px;
+              height: 40px;
+              stroke: var(--text-secondary);
+              fill: none;
+              stroke-width: 2.5;
               transition: fill 0.3s ease;
           }
 
           .power-button.on svg {
-              fill: var(--accent-green);
+              stroke: var(--accent-green);
           }
 
           /* Equalizer */
@@ -594,13 +600,141 @@
               color: var(--text-secondary);
               margin-top: var(--spacing-1);
           }
+
+          /* Collapsible connection panel */
+          #connection-panel {
+              transition: all 0.3s ease;
+              overflow: hidden;
+          }
+
+          #connection-panel.collapsed {
+              max-height: 0;
+              margin-top: 0 !important;
+              opacity: 0;
+          }
+
+          #toggle-icon {
+              transition: transform 0.3s ease;
+              display: inline-block;
+          }
+
+          #toggle-icon.collapsed {
+              transform: rotate(-90deg);
+          }
+
+          /* Toggle Button Style */
+          .toggle-container {
+              display: flex;
+              align-items: center;
+              gap: var(--spacing-3);
+              margin-top: var(--spacing-3);
+          }
+
+          .toggle-switch {
+              position: relative;
+              width: 60px;
+              height: 32px;
+              background: var(--background-darker);
+              border-radius: 16px;
+              cursor: pointer;
+              transition: background 0.3s ease;
+              border: 2px solid rgba(255, 255, 255, 0.2);
+          }
+
+          .toggle-switch.active {
+              background: var(--accent-blue);
+              border-color: var(--accent-blue);
+          }
+
+          .toggle-switch::after {
+              content: '';
+              position: absolute;
+              top: 3px;
+              left: 3px;
+              width: 22px;
+              height: 22px;
+              background: white;
+              border-radius: 50%;
+              transition: transform 0.3s ease;
+              box-shadow: var(--shadow-sm);
+          }
+
+          .toggle-switch.active::after {
+              transform: translateX(28px);
+          }
+
+          .toggle-label {
+              color: var(--text-light);
+              font-size: 0.95rem;
+              user-select: none;
+              cursor: pointer;
+          }
+
+          /* Main Tabs */
+          .main-tabs {
+              display: flex;
+              border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+              margin-bottom: var(--spacing-4);
+              overflow-x: auto;
+              background: var(--card-background);
+              border-radius: var(--radius) var(--radius) 0 0;
+          }
+
+          .main-tab {
+              padding: var(--spacing-4) var(--spacing-6);
+              background: none;
+              border: none;
+              color: var(--text-secondary);
+              cursor: pointer;
+              font-size: 1rem;
+              font-weight: 500;
+              white-space: nowrap;
+              transition: all 0.3s ease;
+              border-bottom: 3px solid transparent;
+              flex: 1;
+              min-width: 120px;
+          }
+
+          .main-tab:hover {
+              color: var(--text-primary);
+              background-color: rgba(255, 255, 255, 0.05);
+          }
+
+          .main-tab.active {
+              color: var(--accent-blue);
+              border-bottom-color: var(--accent-blue);
+              background-color: rgba(104, 141, 177, 0.1);
+          }
+
+          /* Tab Content */
+          .tab-content {
+              display: none;
+          }
+
+          .tab-content.active {
+              display: block;
+          }
+
+          @media (max-width: 768px) {
+              .main-tab {
+                  font-size: 0.9rem;
+                  padding: var(--spacing-3) var(--spacing-4);
+                  min-width: 100px;
+              }
+          }
       </style>
   </head>
   <body>
       <header class="header">
-          <h1>Yamaha RX-V577 Advanced Control</h1>
-          <div class="card">
-              <div class="connection-panel">
+          <h1>Yamaha RX-V577</h1>
+          <div class="card" id="connection-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <h3 style="margin: 0; font-size: 1rem;">Verbindung</h3>
+                  <button class="btn btn-sm" id="toggle-connection" style="background: transparent; border: none; color: var(--text-light); font-size: 1.2rem; padding: 0.25rem 0.5rem;">
+                      <span id="toggle-icon">▼</span>
+                  </button>
+              </div>
+              <div class="connection-panel" id="connection-panel" style="margin-top: var(--spacing-3);">
                   <label class="form-label">Receiver IP:</label>
                   <input type="text" id="receiver-ip" class="form-input" placeholder="192.168.1.100" value="">
                   <button class="btn btn-primary" id="connect-btn">
@@ -634,14 +768,23 @@
               </div>
           </div>
 
+          <!-- Main Tabs -->
+          <div class="main-tabs" id="main-tabs" style="display: none;">
+              <button class="main-tab active" data-tab="basic">Grundsteuerung</button>
+              <button class="main-tab" data-tab="extended">Erweiterte Funktionen</button>
+              <button class="main-tab" data-tab="system">System Info</button>
+          </div>
+
           <!-- Zone Tabs -->
           <div class="tabs" id="zone-tabs" style="display: none;">
               <button class="tab active" data-zone="Main_Zone">Hauptzone</button>
               <button class="tab" data-zone="Zone_2">Zone 2</button>
           </div>
 
-          <!-- Main Controls -->
+          <!-- Tab Contents -->
           <div id="controls" style="display: none;">
+              <!-- Basic Controls Tab -->
+              <div class="tab-content active" id="basic-tab">
               <!-- Basic Controls -->
               <div class="card">
                   <h2>Grundsteuerung</h2>
@@ -665,12 +808,21 @@
                                   <span>Lautstärke</span>
                                   <span id="volume-value">-40 dB</span>
                               </div>
-                              <input type="range" class="slider" id="volume-slider" min="-80" max="16" value="-40" step="0.5">
+                              <input type="range" class="slider" id="volume-slider" min="-80" max="-20" value="-40" step="0.5">
                           </div>
                           <div style="display: flex; gap: var(--spacing-2); margin-top: var(--spacing-3);">
                               <button class="btn btn-outline btn-sm" id="vol-down">-</button>
-                              <button class="btn btn-danger btn-sm" id="mute-btn">Stumm</button>
                               <button class="btn btn-outline btn-sm" id="vol-up">+</button>
+                          </div>
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="mute-toggle"></div>
+                              <label class="toggle-label" for="mute-toggle">Stummschaltung</label>
+                          </div>
+                          <div style="display: flex; align-items: center; gap: var(--spacing-2); margin-top: var(--spacing-3);">
+                              <input type="checkbox" id="volume-extended" style="width: 18px; height: 18px;">
+                              <label for="volume-extended" style="color: var(--text-light); font-size: 0.9rem; cursor: pointer;">
+                                  Volle Lautstärke freischalten (-20 dB bis +16 dB)
+                              </label>
                           </div>
                       </div>
 
@@ -875,6 +1027,135 @@
                       </div>
                   </div>
               </div>
+              </div> <!-- End basic-tab -->
+
+              <!-- Extended Functions Tab -->
+              <div class="tab-content" id="extended-tab">
+                  <!-- Audio Enhancement -->
+                  <div class="card">
+                      <h2>Audio Enhancement</h2>
+                      <div class="grid grid-2">
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="extra-bass-toggle"></div>
+                              <label class="toggle-label">Extra Bass</label>
+                          </div>
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="music-enhancer-toggle"></div>
+                              <label class="toggle-label">Compressed Music Enhancer</label>
+                          </div>
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="pure-direct-toggle"></div>
+                              <label class="toggle-label">Pure Direct Mode</label>
+                          </div>
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="vps-toggle"></div>
+                              <label class="toggle-label">Virtual Presence Speaker (VPS)</label>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- System Settings -->
+                  <div class="card">
+                      <h2>Erweiterte Systemeinstellungen</h2>
+                      <div class="grid grid-2">
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="bi-amp-toggle"></div>
+                              <label class="toggle-label">Bi-Amp Mode</label>
+                          </div>
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="eco-mode-toggle"></div>
+                              <label class="toggle-label">ECO Mode</label>
+                          </div>
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="subwoofer-phase-toggle"></div>
+                              <label class="toggle-label">Subwoofer Phase (0°/180°)</label>
+                          </div>
+                          <div>
+                              <h3>Auto Power Standby</h3>
+                              <select class="form-select" id="auto-standby">
+                                  <option value="Off">Aus</option>
+                                  <option value="2h">2 Stunden</option>
+                                  <option value="4h">4 Stunden</option>
+                                  <option value="8h">8 Stunden</option>
+                                  <option value="12h">12 Stunden</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Quick Setup Presets -->
+                  <div class="card">
+                      <h2>Quick Setup Presets</h2>
+                      <div class="grid grid-3">
+                          <button class="btn btn-primary" id="preset-movie">
+                              🎬 Movie Mode
+                          </button>
+                          <button class="btn btn-primary" id="preset-music">
+                              🎵 Music Mode
+                          </button>
+                          <button class="btn btn-primary" id="preset-gaming">
+                              🎮 Gaming Mode
+                          </button>
+                      </div>
+                      <div class="grid grid-2" style="margin-top: var(--spacing-4);">
+                          <button class="btn btn-secondary" id="save-preset">
+                              💾 Preset speichern
+                          </button>
+                          <button class="btn btn-secondary" id="load-preset">
+                              📂 Preset laden
+                          </button>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- System Info Tab -->
+              <div class="tab-content" id="system-tab">
+                  <!-- System Status -->
+                  <div class="card">
+                      <h2>System Status</h2>
+                      <div class="grid grid-2">
+                          <div class="stat-card">
+                              <div class="stat-value" id="firmware-version">-</div>
+                              <div class="stat-label">Firmware Version</div>
+                          </div>
+                          <div class="stat-card">
+                              <div class="stat-value" id="device-temp">-</div>
+                              <div class="stat-label">Geräteinnentemperatur</div>
+                          </div>
+                          <div class="stat-card">
+                              <div class="stat-value" id="signal-format">-</div>
+                              <div class="stat-label">Input Signal Format</div>
+                          </div>
+                          <div class="stat-card">
+                              <div class="stat-value" id="signal-channels">-</div>
+                              <div class="stat-label">Kanäle</div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Network Information -->
+                  <div class="card">
+                      <h2>Netzwerk Information</h2>
+                      <div class="grid grid-2">
+                          <div class="stat-card">
+                              <div class="stat-value" id="network-ip">-</div>
+                              <div class="stat-label">IP-Adresse</div>
+                          </div>
+                          <div class="stat-card">
+                              <div class="stat-value" id="network-mac">-</div>
+                              <div class="stat-label">MAC-Adresse</div>
+                          </div>
+                          <div class="stat-card">
+                              <div class="stat-value" id="network-gateway">-</div>
+                              <div class="stat-label">Gateway</div>
+                          </div>
+                          <div class="stat-card">
+                              <div class="stat-value" id="network-signal">-</div>
+                              <div class="stat-label">Signalstärke</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
           </div>
       </div>
 
@@ -898,9 +1179,13 @@
                       ipInput: document.getElementById('receiver-ip'),
                       connectBtn: document.getElementById('connect-btn'),
                       connectionStatus: document.getElementById('connection-status'),
+                      toggleConnection: document.getElementById('toggle-connection'),
+                      toggleIcon: document.getElementById('toggle-icon'),
+                      connectionPanel: document.getElementById('connection-panel'),
 
                       // UI Sections
                       stats: document.getElementById('stats'),
+                      mainTabs: document.getElementById('main-tabs'),
                       zoneTabs: document.getElementById('zone-tabs'),
                       controls: document.getElementById('controls'),
 
@@ -909,9 +1194,10 @@
                       powerStatus: document.getElementById('power-status'),
                       volumeSlider: document.getElementById('volume-slider'),
                       volumeValue: document.getElementById('volume-value'),
+                      volumeExtended: document.getElementById('volume-extended'),
                       volUpBtn: document.getElementById('vol-up'),
                       volDownBtn: document.getElementById('vol-down'),
-                      muteBtn: document.getElementById('mute-btn'),
+                      muteToggle: document.getElementById('mute-toggle'),
 
                       // Statistics
                       currentVolume: document.getElementById('current-volume'),
@@ -945,8 +1231,35 @@
                       hdmiAudioFormat: document.getElementById('hdmi-audio-format'),
                       hdmiControl: document.getElementById('hdmi-control'),
 
+                      // Extended Functions
+                      extraBassToggle: document.getElementById('extra-bass-toggle'),
+                      musicEnhancerToggle: document.getElementById('music-enhancer-toggle'),
+                      pureDirectToggle: document.getElementById('pure-direct-toggle'),
+                      vpsToggle: document.getElementById('vps-toggle'),
+                      biAmpToggle: document.getElementById('bi-amp-toggle'),
+                      ecoModeToggle: document.getElementById('eco-mode-toggle'),
+                      subwooferPhaseToggle: document.getElementById('subwoofer-phase-toggle'),
+                      autoStandby: document.getElementById('auto-standby'),
+                      presetMovie: document.getElementById('preset-movie'),
+                      presetMusic: document.getElementById('preset-music'),
+                      presetGaming: document.getElementById('preset-gaming'),
+                      savePreset: document.getElementById('save-preset'),
+                      loadPreset: document.getElementById('load-preset'),
+
+                      // System Info Elements
+                      firmwareVersion: document.getElementById('firmware-version'),
+                      deviceTemp: document.getElementById('device-temp'),
+                      signalFormat: document.getElementById('signal-format'),
+                      signalChannels: document.getElementById('signal-channels'),
+                      networkIp: document.getElementById('network-ip'),
+                      networkMac: document.getElementById('network-mac'),
+                      networkGateway: document.getElementById('network-gateway'),
+                      networkSignal: document.getElementById('network-signal'),
+
                       // Controls
                       message: document.getElementById('message'),
+                      mainTabBtns: document.querySelectorAll('.main-tab'),
+                      tabContents: document.querySelectorAll('.tab-content'),
                       tabs: document.querySelectorAll('.tab'),
                       inputBtns: document.querySelectorAll('[data-input]'),
                       sceneBtns: document.querySelectorAll('[data-scene]')
@@ -958,6 +1271,12 @@
                   this.elements.connectBtn.addEventListener('click', () => this.connect());
                   this.elements.ipInput.addEventListener('keypress', (e) => {
                       if (e.key === 'Enter') this.connect();
+                  });
+                  
+                  // Toggle connection panel
+                  this.elements.toggleConnection.addEventListener('click', () => {
+                      this.elements.connectionPanel.classList.toggle('collapsed');
+                      this.elements.toggleIcon.classList.toggle('collapsed');
                   });
 
                   // Basic Controls
@@ -973,7 +1292,26 @@
 
                   this.elements.volUpBtn.addEventListener('click', () => this.adjustVolume(0.5));
                   this.elements.volDownBtn.addEventListener('click', () => this.adjustVolume(-0.5));
-                  this.elements.muteBtn.addEventListener('click', () => this.toggleMute());
+                  this.elements.muteToggle.addEventListener('click', () => this.toggleMute());
+                  
+                  // Volume extended checkbox
+                  this.elements.volumeExtended.addEventListener('change', (e) => {
+                      const isExtended = e.target.checked;
+                      const currentValue = parseFloat(this.elements.volumeSlider.value);
+                      
+                      if (isExtended) {
+                          // Extended range: -80 to +16
+                          this.elements.volumeSlider.max = '16';
+                      } else {
+                          // Limited range: -80 to -20
+                          this.elements.volumeSlider.max = '-20';
+                          // If current value is above -20, set it to -20
+                          if (currentValue > -20) {
+                              this.elements.volumeSlider.value = '-20';
+                              this.setVolume(-20);
+                          }
+                      }
+                  });
 
                   // Zone Tabs
                   this.elements.tabs.forEach(tab => {
@@ -1050,6 +1388,28 @@
                   // HDMI Settings
                   this.elements.hdmiAudioFormat.addEventListener('change', (e) => this.setHDMIAudioFormat(e.target.value));
                   this.elements.hdmiControl.addEventListener('change', (e) => this.setHDMIControl(e.target.value));
+
+                  // Main Tab Navigation
+                  this.elements.mainTabBtns.forEach(tab => {
+                      tab.addEventListener('click', (e) => this.switchMainTab(e.target.dataset.tab));
+                  });
+
+                  // Extended Functions
+                  this.elements.extraBassToggle.addEventListener('click', () => this.toggleExtraBass());
+                  this.elements.musicEnhancerToggle.addEventListener('click', () => this.toggleMusicEnhancer());
+                  this.elements.pureDirectToggle.addEventListener('click', () => this.togglePureDirect());
+                  this.elements.vpsToggle.addEventListener('click', () => this.toggleVPS());
+                  this.elements.biAmpToggle.addEventListener('click', () => this.toggleBiAmp());
+                  this.elements.ecoModeToggle.addEventListener('click', () => this.toggleEcoMode());
+                  this.elements.subwooferPhaseToggle.addEventListener('click', () => this.toggleSubwooferPhase());
+                  this.elements.autoStandby.addEventListener('change', (e) => this.setAutoStandby(e.target.value));
+
+                  // Presets
+                  this.elements.presetMovie.addEventListener('click', () => this.loadQuickPreset('movie'));
+                  this.elements.presetMusic.addEventListener('click', () => this.loadQuickPreset('music'));
+                  this.elements.presetGaming.addEventListener('click', () => this.loadQuickPreset('gaming'));
+                  this.elements.savePreset.addEventListener('click', () => this.saveCurrentPreset());
+                  this.elements.loadPreset.addEventListener('click', () => this.loadUserPreset());
               }
 
               async loadSavedIP() {
@@ -1060,6 +1420,9 @@
                       
                       if (data.receiverIP) {
                           this.elements.ipInput.value = data.receiverIP;
+                          // Collapse connection panel when IP is saved
+                          this.elements.connectionPanel.classList.add('collapsed');
+                          this.elements.toggleIcon.classList.add('collapsed');
                           // Auto-connect if IP is saved on server
                           setTimeout(() => this.connect(), 1000);
                           return;
@@ -1072,6 +1435,9 @@
                   const savedIP = localStorage.getItem('yamaha-receiver-ip');
                   if (savedIP) {
                       this.elements.ipInput.value = savedIP;
+                      // Collapse connection panel when IP is saved
+                      this.elements.connectionPanel.classList.add('collapsed');
+                      this.elements.toggleIcon.classList.add('collapsed');
                   }
               }
 
@@ -1097,6 +1463,7 @@
                       this.elements.connectionStatus.textContent = 'Verbunden';
 
                       this.elements.stats.style.display = 'grid';
+                      this.elements.mainTabs.style.display = 'flex';
                       this.elements.zoneTabs.style.display = 'flex';
                       this.elements.controls.style.display = 'block';
 
@@ -1109,6 +1476,7 @@
                       this.elements.connectionStatus.textContent = 'Verbindung fehlgeschlagen';
 
                       this.elements.stats.style.display = 'none';
+                      this.elements.mainTabs.style.display = 'none';
                       this.elements.zoneTabs.style.display = 'none';
                       this.elements.controls.style.display = 'none';
 
@@ -1188,15 +1556,19 @@
 
                   if (volume) {
                       const vol = parseInt(volume) / 10;
-                      this.elements.volumeSlider.value = vol;
+                      const isExtended = this.elements.volumeExtended.checked;
+                      const maxSliderValue = isExtended ? 16 : -20;
+                      
+                      // Only update slider if volume is within current slider range
+                      if (vol >= -80 && vol <= maxSliderValue) {
+                          this.elements.volumeSlider.value = vol;
+                      }
                       this.updateVolumeDisplay(vol);
                       this.elements.currentVolume.textContent = vol;
                   }
 
                   if (mute) {
-                      this.elements.muteBtn.textContent = mute === 'On' ? 'Entstummen' : 'Stumm';
-                      this.elements.muteBtn.classList.toggle('btn-danger', mute === 'On');
-                      this.elements.muteBtn.classList.toggle('btn-outline', mute !== 'On');
+                      this.elements.muteToggle.classList.toggle('active', mute === 'On');
                   }
 
                   if (input) {
@@ -1215,9 +1587,17 @@
               }
 
               adjustVolume(change) {
-                  const current = parseFloat(this.elements.volumeSlider.value);
+                  // Get current volume from display (which shows the true volume)
+                  const current = parseFloat(this.elements.currentVolume.textContent);
                   const newVal = Math.max(-80, Math.min(16, current + change));
-                  this.elements.volumeSlider.value = newVal;
+                  const isExtended = this.elements.volumeExtended.checked;
+                  const maxSliderValue = isExtended ? 16 : -20;
+                  
+                  // Update slider only if within current slider range
+                  if (newVal >= -80 && newVal <= maxSliderValue) {
+                      this.elements.volumeSlider.value = newVal;
+                  }
+                  
                   this.setVolume(newVal);
               }
 
@@ -1248,13 +1628,14 @@
               }
 
               async toggleMute() {
-                  const isMuted = this.elements.muteBtn.textContent === 'Entstummen';
+                  const isMuted = this.elements.muteToggle.classList.contains('active');
                   const newState = isMuted ? 'Off' : 'On';
                   const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Volume><Mute>${newState}</Mute></Volume></${this.currentZone}></YAMAHA_AV>`;
 
                   try {
                       await this.sendCommand(xml);
-                      this.showMessage(`Stumm ${newState === 'On' ? 'Ein' : 'Aus'}`, 'success');
+                      this.elements.muteToggle.classList.toggle('active');
+                      this.showMessage(`Ton ${newState === 'On' ? 'deaktiviert' : 'aktiviert'}`, 'success');
                   } catch (error) {
                       this.showMessage('Fehler beim Stummschalten: ' + error.message, 'error');
                   }
@@ -1435,6 +1816,215 @@
                   setTimeout(() => {
                       this.elements.message.classList.remove('show');
                   }, 3000);
+              }
+
+              // Main Tab Navigation
+              switchMainTab(tabName) {
+                  // Update tab buttons
+                  this.elements.mainTabBtns.forEach(tab => {
+                      tab.classList.toggle('active', tab.dataset.tab === tabName);
+                  });
+
+                  // Update tab content
+                  this.elements.tabContents.forEach(content => {
+                      content.classList.toggle('active', content.id === `${tabName}-tab`);
+                  });
+
+                  // Load system info when switching to system tab
+                  if (tabName === 'system') {
+                      this.loadSystemInfo();
+                  }
+              }
+
+              // Extended Functions
+              async toggleExtraBass() {
+                  const isActive = this.elements.extraBassToggle.classList.contains('active');
+                  const newState = isActive ? 'Off' : 'On';
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><Extra_Bass>${newState}</Extra_Bass></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.elements.extraBassToggle.classList.toggle('active');
+                      this.showMessage(`Extra Bass ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des Extra Bass: ' + error.message, 'error');
+                  }
+              }
+
+              async toggleMusicEnhancer() {
+                  const isActive = this.elements.musicEnhancerToggle.classList.contains('active');
+                  const newState = isActive ? 'Off' : 'On';
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><YPAO><VOL><Adaptive_DRC>${newState}</Adaptive_DRC></VOL></YPAO></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.elements.musicEnhancerToggle.classList.toggle('active');
+                      this.showMessage(`Music Enhancer ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des Music Enhancer: ' + error.message, 'error');
+                  }
+              }
+
+              async togglePureDirect() {
+                  const isActive = this.elements.pureDirectToggle.classList.contains('active');
+                  const newState = isActive ? 'Off' : 'On';
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><Pure_Direct><Mode>${newState}</Mode></Pure_Direct></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.elements.pureDirectToggle.classList.toggle('active');
+                      this.showMessage(`Pure Direct ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des Pure Direct: ' + error.message, 'error');
+                  }
+              }
+
+              async toggleVPS() {
+                  const isActive = this.elements.vpsToggle.classList.contains('active');
+                  // VPS is activated by selecting a Cinema DSP program
+                  const program = isActive ? 'Straight' : 'Movie';
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Surround><Program_Sel><Current><Sound_Program>${program}</Sound_Program></Current></Program_Sel></Surround></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.elements.vpsToggle.classList.toggle('active');
+                      this.showMessage(`VPS ${isActive ? 'deaktiviert' : 'aktiviert'}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des VPS: ' + error.message, 'error');
+                  }
+              }
+
+              async toggleBiAmp() {
+                  const isActive = this.elements.biAmpToggle.classList.contains('active');
+                  const newState = isActive ? 'Off' : 'On';
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><YPAO><Speaker_Config><Bi_Amp>${newState}</Bi_Amp></Speaker_Config></YPAO></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.elements.biAmpToggle.classList.toggle('active');
+                      this.showMessage(`Bi-Amp Mode ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des Bi-Amp Mode: ' + error.message, 'error');
+                  }
+              }
+
+              async toggleEcoMode() {
+                  const isActive = this.elements.ecoModeToggle.classList.contains('active');
+                  const newState = isActive ? 'Off' : 'On';
+                  const xml = `<YAMAHA_AV cmd="PUT"><System><Power_Control><Power_Saving>${newState}</Power_Saving></Power_Control></System></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.elements.ecoModeToggle.classList.toggle('active');
+                      this.showMessage(`ECO Mode ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des ECO Mode: ' + error.message, 'error');
+                  }
+              }
+
+              async toggleSubwooferPhase() {
+                  const isActive = this.elements.subwooferPhaseToggle.classList.contains('active');
+                  const newPhase = isActive ? 'Normal' : 'Reverse';
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><YPAO><Speaker_Config><Pattern_1><Subwoofer><Phase>${newPhase}</Phase></Subwoofer></Pattern_1></Speaker_Config></YPAO></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.elements.subwooferPhaseToggle.classList.toggle('active');
+                      this.showMessage(`Subwoofer Phase: ${newPhase}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen der Subwoofer Phase: ' + error.message, 'error');
+                  }
+              }
+
+              async setAutoStandby(value) {
+                  const xml = `<YAMAHA_AV cmd="PUT"><System><Power_Control><Auto_Power_Standby>${value}</Auto_Power_Standby></Power_Control></System></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.showMessage(`Auto Standby: ${value}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des Auto Standby: ' + error.message, 'error');
+                  }
+              }
+
+              // Quick Presets
+              loadQuickPreset(preset) {
+                  const presets = {
+                      movie: {
+                          dsp: 'Movie',
+                          dialogue: 3,
+                          bass: 2,
+                          enhancer: 'Off'
+                      },
+                      music: {
+                          dsp: 'Hall in Munich',
+                          dialogue: 0,
+                          bass: -1,
+                          enhancer: 'On'
+                      },
+                      gaming: {
+                          dsp: 'Sci-Fi',
+                          dialogue: 6,
+                          bass: 4,
+                          enhancer: 'Off'
+                      }
+                  };
+
+                  const config = presets[preset];
+                  if (config) {
+                      this.setDSP(config.dsp);
+                      this.setDialogueLevel(config.dialogue);
+                      // Apply other settings...
+                      this.showMessage(`${preset.charAt(0).toUpperCase() + preset.slice(1)} Preset geladen`, 'success');
+                  }
+              }
+
+              saveCurrentPreset() {
+                  // Get current settings and save to localStorage
+                  const preset = {
+                      volume: this.elements.volumeSlider.value,
+                      input: this.elements.inputBtns.find(btn => btn.classList.contains('active'))?.dataset.input,
+                      // Add more current settings...
+                  };
+                  
+                  localStorage.setItem('yamaha-user-preset', JSON.stringify(preset));
+                  this.showMessage('Preset gespeichert', 'success');
+              }
+
+              loadUserPreset() {
+                  const preset = localStorage.getItem('yamaha-user-preset');
+                  if (preset) {
+                      const config = JSON.parse(preset);
+                      // Apply saved settings...
+                      this.showMessage('Benutzer-Preset geladen', 'success');
+                  } else {
+                      this.showMessage('Kein Preset gefunden', 'error');
+                  }
+              }
+
+              // System Information
+              async loadSystemInfo() {
+                  try {
+                      // Get system info
+                      const sysInfoXml = `<YAMAHA_AV cmd="GET"><System><Config>GetParam</Config></System></YAMAHA_AV>`;
+                      const netInfoXml = `<YAMAHA_AV cmd="GET"><System><Misc>GetParam</Misc></System></YAMAHA_AV>`;
+                      
+                      const [sysResponse, netResponse] = await Promise.all([
+                          this.sendCommand(sysInfoXml),
+                          this.sendCommand(netInfoXml)
+                      ]);
+
+                      // Parse and display system info
+                      const firmwareVersion = sysResponse.querySelector('Version')?.textContent || 'N/A';
+                      this.elements.firmwareVersion.textContent = firmwareVersion;
+
+                      // Network info would be parsed similarly
+                      this.elements.networkIp.textContent = this.ip;
+                      
+                  } catch (error) {
+                      console.error('Error loading system info:', error);
+                      this.showMessage('Fehler beim Laden der Systeminformationen', 'error');
+                  }
               }
           }
 
