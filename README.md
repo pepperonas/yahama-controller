@@ -1,6 +1,6 @@
-# Yamaha Receiver Control
+# Yamaha RX-V577 Advanced Control Server
 
-A web application for controlling Yamaha RX-V577 and other compatible network-enabled Yamaha receivers through their XML control protocol.
+Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V577 AV-Receivers mit erweiterten Funktionen und modernem Dark Theme Interface.
 
 ## Features
 
@@ -30,28 +30,41 @@ A web application for controlling Yamaha RX-V577 and other compatible network-en
 - **German Localization**: Complete German interface
 - **Status Polling**: Auto-refresh every 5 seconds
 
-## Setup
+## Installation & Setup
 
-### Method 1: Using Node.js Server (Recommended)
+### Automatische Installation mit PM2 (Empfohlen)
 
-1. **Install Dependencies**:
+```bash
+# Repository klonen
+git clone https://github.com/pepperonas/yahama-server.git
+cd yahama-server
+
+# Dependencies installieren
+npm install
+
+# PM2 Process starten
+pm2 start server.js --name yahama-amp
+
+# PM2 Auto-Start aktivieren
+pm2 startup
+pm2 save
+```
+
+### Manuelle Installation
+
+1. **Dependencies installieren**:
    ```bash
-   cd yahama-amp
    npm install
    ```
 
-2. **Start the Server**:
+2. **Server starten**:
    ```bash
    npm start
    ```
-   Or for development with auto-reload:
-   ```bash
-   npm run dev
-   ```
 
-3. **Open the Application**:
-   - Open your browser and go to `http://localhost:3000`
-   - The server handles CORS issues and proxies requests to your receiver
+3. **Anwendung öffnen**:
+   - Browser: `http://localhost:3000`
+   - Netzwerk: `http://[RaspberryPI-IP]:3000`
 
 4. **Find Your Receiver's IP Address**:
    - Check your router's admin panel for connected devices
@@ -77,13 +90,26 @@ A web application for controlling Yamaha RX-V577 and other compatible network-en
    - Use Method 1 (Node.js server) instead
    - Or run a local web server: `python -m http.server 8000`
 
-## File Structure
+## Projektstruktur
 
-- `index.html` - Basic receiver control interface
-- `index-advanced.html` - Advanced control with full feature set
-- `server.js` - Node.js CORS proxy server
-- `package.json` - Node.js dependencies
-- `README.md` - This documentation
+```
+yahama-server/
+├── index.html              # Haupt-Interface (Advanced Version)
+├── index-advanced.html     # Erweiterte Steuerung (Backup)
+├── server.js              # Express.js Server mit CORS Proxy
+├── package.json           # Node.js Dependencies
+├── deploy-raspi.sh        # Deployment-Script für Raspberry Pi
+├── .gitignore            # Git-Ignore-Regeln
+└── README.md             # Diese Dokumentation
+```
+
+## Technische Spezifikationen
+
+- **Server**: Node.js mit Express.js
+- **Proxy**: HTTP-Proxy-Middleware für CORS-Handling
+- **Port**: 3000 (Standard)
+- **Netzwerk**: Läuft auf 0.0.0.0 für Netzwerkzugriff
+- **Process Manager**: PM2 für Produktionsumgebung
 
 ## Usage
 
@@ -193,6 +219,34 @@ Due to browser security restrictions, you may encounter CORS (Cross-Origin Resou
 - Safari: Limited due to stricter CORS policies
 - Edge: Good compatibility
 
-## License
+## PM2 Management
 
-This project is provided as-is for educational and personal use. Yamaha and RX-V577 are trademarks of Yamaha Corporation.
+```bash
+# Status anzeigen
+pm2 status
+
+# Logs anzeigen
+pm2 logs yahama-amp
+
+# Neustart
+pm2 restart yahama-amp
+
+# Stoppen
+pm2 stop yahama-amp
+
+# Entfernen
+pm2 delete yahama-amp
+```
+
+## Raspberry Pi Deployment
+
+Das Projekt läuft optimal auf einem Raspberry Pi als dedizierter Yamaha-Controller:
+
+1. **Raspberry Pi OS** mit Node.js und PM2
+2. **Netzwerkzugriff** über lokale IP-Adresse
+3. **Auto-Start** beim Systemstart durch PM2
+4. **Log-Management** durch PM2 integriert
+
+## Lizenz
+
+Dieses Projekt wird als Open Source für den persönlichen und edukativen Gebrauch bereitgestellt. Yamaha und RX-V577 sind Markenzeichen der Yamaha Corporation.
