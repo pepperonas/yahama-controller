@@ -101,8 +101,8 @@ Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V57
 
 ```bash
 # Repository klonen
-git clone https://github.com/your-username/yahama-amp.git
-cd yahama-amp
+git clone https://github.com/pepperonas/yahama-controller.git
+cd yahama-controller
 
 # Dependencies installieren
 npm install
