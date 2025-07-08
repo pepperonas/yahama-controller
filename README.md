@@ -2,7 +2,9 @@
 
 Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V577 AV-Receivers mit erweiterten Funktionen und modernem Dark Theme Interface.
 
-![Yamaha Control Interface](yahama-mockup.png)
+![Yamaha Control Interface](yahama-mockup-1.png)
+
+![Yamaha Control Interface - Extended Features](yamaha-mockup-2.png)
 
 ## Features
 
@@ -310,4 +312,6 @@ Das Projekt läuft optimal auf einem Raspberry Pi als dedizierter Yamaha-Control
 
 ## Lizenz
 
-Dieses Projekt wird als Open Source für den persönlichen und edukativen Gebrauch bereitgestellt. Yamaha und RX-V577 sind Markenzeichen der Yamaha Corporation.
+Martin Pfeffer 2025 Berlin, Lizenz MIT
+
+Yamaha und RX-V577 sind Markenzeichen der Yamaha Corporation.
