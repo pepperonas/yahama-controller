@@ -2,6 +2,8 @@
 
 Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V577 AV-Receivers mit erweiterten Funktionen und modernem Dark Theme Interface.
 
+> **Hinweis**: Dieses Projekt trägt bewusst nicht den offiziellen "Yamaha"-Markennamen im Projektverzeichnis oder Code, um lizenzrechtliche Konflikte zu vermeiden. Es handelt sich um eine inoffizielle, Open-Source-Implementierung für den persönlichen Gebrauch.
+
 ![Yamaha Control Interface](yahama-mockup-1.png)
 
 ![Yamaha Control Interface - Extended Features](yamaha-mockup-2.png)
