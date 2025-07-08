@@ -49,7 +49,7 @@ Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V57
 
 ### 🔧 **Erweiterte Audio-Features**
 - **Extra Bass**: Verstärkte Basswidergabe
-- **Bass/Treble Control**: -10 bis +10 dB Einstellung
+- **Bass/Treble Control**: -6 bis +6 dB Einstellung
 - **Compressed Music Enhancer**: Verbesserung komprimierter Audiodateien
 - **Pure Direct Mode**: Umgehung der Tonschaltungen
 - **Straight Mode**: Direkte Signalverarbeitung
