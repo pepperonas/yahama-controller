@@ -1068,22 +1068,10 @@
 
                   <!-- System Settings -->
                   <div class="card">
-                      <h2>Erweiterte Systemeinstellungen</h2>
+                      <h2>Sleep Timer</h2>
                       <div class="grid grid-2">
-                          <div class="toggle-container">
-                              <div class="toggle-switch" id="bi-amp-toggle"></div>
-                              <label class="toggle-label">Bi-Amp Mode</label>
-                          </div>
-                          <div class="toggle-container">
-                              <div class="toggle-switch" id="eco-mode-toggle"></div>
-                              <label class="toggle-label">ECO Mode</label>
-                          </div>
-                          <div class="toggle-container">
-                              <div class="toggle-switch" id="subwoofer-phase-toggle"></div>
-                              <label class="toggle-label">Subwoofer Phase (0°/180°)</label>
-                          </div>
                           <div>
-                              <h3>Sleep Timer</h3>
+                              <h3>Ausschalten nach</h3>
                               <select class="form-select" id="sleep-timer">
                                   <option value="0">Aus</option>
                                   <option value="30">30 Minuten</option>
@@ -1249,9 +1237,6 @@
                       pureDirectToggle: document.getElementById('pure-direct-toggle'),
                       straightModeToggle: document.getElementById('straight-mode-toggle'),
                       vpsToggle: document.getElementById('vps-toggle'),
-                      biAmpToggle: document.getElementById('bi-amp-toggle'),
-                      ecoModeToggle: document.getElementById('eco-mode-toggle'),
-                      subwooferPhaseToggle: document.getElementById('subwoofer-phase-toggle'),
                       sleepTimer: document.getElementById('sleep-timer'),
                       presetMovie: document.getElementById('preset-movie'),
                       presetMusic: document.getElementById('preset-music'),
@@ -1399,9 +1384,6 @@
                   this.elements.pureDirectToggle.addEventListener('click', () => this.togglePureDirect());
                   this.elements.straightModeToggle.addEventListener('click', () => this.toggleStraightMode());
                   this.elements.vpsToggle.addEventListener('click', () => this.toggleVPS());
-                  this.elements.biAmpToggle.addEventListener('click', () => this.toggleBiAmp());
-                  this.elements.ecoModeToggle.addEventListener('click', () => this.toggleEcoMode());
-                  this.elements.subwooferPhaseToggle.addEventListener('click', () => this.toggleSubwooferPhase());
                   this.elements.sleepTimer.addEventListener('change', (e) => this.setSleepTimer(e.target.value));
 
                   // Presets
@@ -1932,47 +1914,8 @@
                   }
               }
 
-              async toggleBiAmp() {
-                  const isActive = this.elements.biAmpToggle.classList.contains('active');
-                  const newState = isActive ? 'Off' : 'On';
-                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><YPAO><Speaker_Config><Bi_Amp>${newState}</Bi_Amp></Speaker_Config></YPAO></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
 
-                  try {
-                      await this.sendCommand(xml);
-                      this.elements.biAmpToggle.classList.toggle('active');
-                      this.showMessage(`Bi-Amp Mode ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
-                  } catch (error) {
-                      this.showMessage('Fehler beim Setzen des Bi-Amp Mode: ' + error.message, 'error');
-                  }
-              }
 
-              async toggleEcoMode() {
-                  const isActive = this.elements.ecoModeToggle.classList.contains('active');
-                  const newState = isActive ? 'Off' : 'On';
-                  const xml = `<YAMAHA_AV cmd="PUT"><System><Power_Control><Power_Saving>${newState}</Power_Saving></Power_Control></System></YAMAHA_AV>`;
-
-                  try {
-                      await this.sendCommand(xml);
-                      this.elements.ecoModeToggle.classList.toggle('active');
-                      this.showMessage(`ECO Mode ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
-                  } catch (error) {
-                      this.showMessage('Fehler beim Setzen des ECO Mode: ' + error.message, 'error');
-                  }
-              }
-
-              async toggleSubwooferPhase() {
-                  const isActive = this.elements.subwooferPhaseToggle.classList.contains('active');
-                  const newPhase = isActive ? 'Normal' : 'Reverse';
-                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><YPAO><Speaker_Config><Pattern_1><Subwoofer><Phase>${newPhase}</Phase></Subwoofer></Pattern_1></Speaker_Config></YPAO></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
-
-                  try {
-                      await this.sendCommand(xml);
-                      this.elements.subwooferPhaseToggle.classList.toggle('active');
-                      this.showMessage(`Subwoofer Phase: ${newPhase}`, 'success');
-                  } catch (error) {
-                      this.showMessage('Fehler beim Setzen der Subwoofer Phase: ' + error.message, 'error');
-                  }
-              }
 
               async setSleepTimer(minutes) {
                   const sleepValue = minutes === '0' ? 'Off' : `${minutes} min`;
