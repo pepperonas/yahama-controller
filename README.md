@@ -6,31 +6,90 @@ Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V57
 
 ## Features
 
-### Basic Controls
-- **Power Control**: Turn receiver on/off or switch to standby
-- **Volume Control**: Adjust volume with slider or buttons, mute/unmute
-- **Input Selection**: Switch between HDMI, AV, Audio, and network sources
-- **Zone Control**: Support for Main Zone and Zone 2
-- **Scene Selection**: Activate preconfigured scenes (1-4)
+### 📱 **Navigation & Interface**
+- **3 Main Tabs**: Grundsteuerung (Basic), Erweiterte Funktionen (Extended), System Info
+- **Multi-Zone Control**: Hauptzone und Zone 2 mit separaten Einstellungen
+- **Modern Dark Theme**: Professionelles dunkles UI mit CSS-Variablen
+- **Responsive Design**: Optimiert für Desktop, Tablet und Mobile
+- **PWA-Ready**: Progressive Web App mit Offline-Funktionalität
+- **German Localization**: Vollständig deutsche Benutzeroberfläche
 
-### Advanced Audio Controls
-- **DSP Programs**: 15+ sound programs (Movie, Music, Game, Concert Hall, etc.)
-- **Dialogue Level**: Enhance dialogue clarity (-6 to +6 dB)
-- **7-Band Equalizer**: Precise frequency control (63Hz to 16kHz)
-- **Speaker Configuration**: Individual level control for subwoofer, center, and surround speakers
-- **Dynamic Range Control**: Standard/Maximum DRC settings
-- **Lip Sync Delay**: Audio delay compensation (0-250ms)
+### 🔊 **Audio-Steuerung**
+- **Power Control**: Ein/Aus mit visuellem Status-Indikator
+- **Volume Control**: -80 dB bis -20 dB (erweitert bis +16 dB)
+- **Volume Buttons**: Feineinstellung mit +/- Tasten
+- **Mute Toggle**: Audio stumm/laut mit visueller Rückmeldung
+- **Extended Volume Mode**: Freischaltung des vollen Lautstärkebereichs
 
-### HDMI & Digital Audio
-- **HDMI Audio Format**: PCM, DTS, Dolby Digital, Bitstream
-- **HDMI Control**: CEC control on/off
+### 📺 **Quellenauswahl**
+- **HDMI Inputs**: HDMI 1, 2, 3, 4
+- **Analog Inputs**: AV 1, AV 2
+- **Digital Sources**: AirPlay, Server
+- **Active Source Display**: Visuelle Anzeige der aktiven Quelle
 
-### User Interface
-- **Modern Dark Theme**: Material Design inspired with CSS variables
-- **Real-time Statistics**: Live display of volume, input, DSP mode, and zone
-- **Responsive Design**: Optimized for desktop, tablet, and mobile
-- **German Localization**: Complete German interface
-- **Status Polling**: Auto-refresh every 5 seconds
+### 🎵 **DSP & Surround Sound**
+- **15 DSP Programme**:
+  - Straight (Ohne DSP), Surround Decoder
+  - Movie, Music, Game
+  - Concert Hall, Jazz Club, Rock Concert
+  - Stadium, Church, Chamber
+  - Drama, Action Game, RPG, Sports
+- **Dialogue Level**: Sprachverständlichkeit (-6 bis +6 dB)
+- **Live DSP Display**: Anzeige des aktiven Modus
+
+### 🎛️ **7-Band Equalizer**
+- **Frequenzbänder**: 63Hz, 160Hz, 400Hz, 1kHz, 2.5kHz, 6.3kHz, 16kHz
+- **Einstellbereich**: -6 bis +6 dB pro Band
+- **EQ Reset**: Ein-Klick Zurücksetzen auf neutralen Klang
+- **Live Preview**: Sofortige Anzeige der Einstellungen
+
+### 🔧 **Erweiterte Audio-Features**
+- **Extra Bass**: Verstärkte Basswidergabe
+- **Bass/Treble Control**: -10 bis +10 dB Einstellung
+- **Compressed Music Enhancer**: Verbesserung komprimierter Audiodateien
+- **Pure Direct Mode**: Umgehung der Tonschaltungen
+- **Straight Mode**: Direkte Signalverarbeitung
+- **Virtual Presence Speaker (VPS)**: Virtueller Surround-Effekt
+
+### 🏠 **Lautsprecher-Konfiguration** (YPAO-gesteuert, Anzeige-only)
+- **Subwoofer Level**: Aktuelle YPAO-Einstellung
+- **Center Speaker Level**: Center-Lautsprecher Pegel
+- **Surround Level**: Surround-Lautsprecher Pegel
+- **Dynamic Range Control (DRC)**: Status-Anzeige
+- **Lip Sync Delay**: Audio-Verzögerung (YPAO-optimiert)
+
+### 🎬 **Szenen-Steuerung**
+- **4 Szenen-Presets**: Schnellzugriff auf gespeicherte Konfigurationen
+- **Scene Activation**: Ein-Klick Szenen-Wechsel
+- **Custom Configurations**: Persönliche Einstellungen speichern
+
+### 📱 **HDMI-Einstellungen**
+- **Audio Format**: PCM, DTS, Dolby Digital, Bitstream
+- **HDMI Control**: Ein/Aus für HDMI-CEC Steuerung
+
+### ⏰ **Sleep Timer**
+- **Timer-Optionen**: Aus, 30, 60, 90, 120 Minuten
+- **Automatisches Ausschalten**: Programmierbare Abschaltung
+
+### 🎯 **Quick Setup Presets**
+- **Movie Mode**: Optimiert für Kinoerlebnis
+- **Music Mode**: Verbessert für Musikwiedergabe
+- **Gaming Mode**: Angepasst für Gaming-Audio
+- **Preset Save/Load**: Benutzerdefinierte Konfigurationen
+
+### 📊 **System-Informationen**
+- **Firmware Version**: Aktuelle System-Firmware
+- **Gerätetemperatur**: Interne Temperaturüberwachung
+- **Signal Format**: Aktuelle Signalinformationen
+- **Kanal-Konfiguration**: Aktive Kanal-Anzeige
+- **Netzwerk-Details**: IP, MAC, Gateway, Signalstärke
+
+### 🌐 **Verbindungsmanagement**
+- **IP-Konfiguration**: Manuelle Receiver-IP Einstellung
+- **Connection Status**: Echtzeit-Verbindungsüberwachung
+- **Auto-Connect**: Automatische Wiederverbindung beim Start
+- **Connection Panel Toggle**: Einklappbare Verbindungssteuerung
+- **Real-Time Polling**: 5-Sekunden Status-Updates
 
 ## Installation & Setup
 
