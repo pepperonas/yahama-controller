@@ -131,25 +131,25 @@ pm2 save
    - Browser: `http://localhost:5001`
    - Netzwerk: `http://[RaspberryPI-IP]:5001`
 
-4. **Find Your Receiver's IP Address**:
-   - Check your router's admin panel for connected devices
-   - Look for "Yamaha" or "RX-V577" in the device list
-   - Or use the receiver's network menu to display the IP address
+4. **Receiver IP-Adresse finden**:
+   - Router Admin-Panel für verbundene Geräte überprüfen
+   - Nach "Yamaha" oder "RX-V577" in der Geräteliste suchen
+   - Oder das Netzwerk-Menü des Receivers für die IP-Anzeige nutzen
 
-5. **Connect to Receiver**:
-   - Enter the receiver's IP address in the connection panel
-   - Click "Connect" to establish connection
-   - The IP address will be saved in `receiver-config.json` for future use
+5. **Mit Receiver verbinden**:
+   - Receiver IP-Adresse im Verbindungspanel eingeben
+   - "Verbinden" klicken um die Verbindung herzustellen
+   - Die IP-Adresse wird in `receiver-config.json` für zukünftige Nutzung gespeichert
 
-### Alternative: Direct Browser Access (May Have CORS Issues)
+### Alternative: Direkter Browser-Zugriff (Mögliche CORS-Probleme)
 
-1. **Direct Access**:
-   - Open `index.html` in your web browser
-   - No installation required, but may encounter CORS restrictions
+1. **Direkter Zugriff**:
+   - `index.html` im Webbrowser öffnen
+   - Keine Installation erforderlich, aber möglicherweise CORS-Einschränkungen
 
-2. **If CORS Issues Occur**:
-   - Use Node.js server method (recommended) instead
-   - Or run a local web server: `python -m http.server 8000`
+2. **Bei CORS-Problemen**:
+   - Node.js Server-Methode verwenden (empfohlen)
+   - Oder lokalen Webserver starten: `python -m http.server 8000`
 
 ## Projektstruktur
 
@@ -176,49 +176,49 @@ yahama-amp/
 - **Interface**: Single Page Application mit Dark Theme
 - **Config**: Automatische IP-Speicherung in JSON-Datei
 
-## Usage
+## Verwendung
 
-### Initial Connection
-1. Enter your receiver's IP address (e.g., `192.168.1.100`)
-2. Click "Connect" - the status indicator will show "Connected" when successful
-3. Control panels will appear once connected
+### Erste Verbindung
+1. Receiver IP-Adresse eingeben (z.B. `192.168.1.100`)
+2. "Verbinden" klicken - der Status-Indikator zeigt "Verbunden" bei Erfolg
+3. Steuerelemente erscheinen nach erfolgreicher Verbindung
 
-### Power Control
-- Click the circular power button to toggle power on/off
-- Status displays current power state (On/Standby)
+### Stromversorgung
+- Den runden Power-Button zum Ein-/Ausschalten klicken
+- Status zeigt aktuellen Zustand (Ein/Standby)
 
-### Volume Control
-- Use the volume slider to adjust level (-80 dB to +16 dB)
-- Click + or - buttons for precise adjustments
-- Click "Mute" to toggle mute state
+### Lautstärke-Steuerung
+- Lautstärke-Regler für Pegelanpassung verwenden (-80 dB bis +16 dB)
+- +/- Buttons für präzise Einstellungen
+- "Stummschaltung" zum Umschalten des Stummzustands
 
-### Input Selection
-- Click any input button to switch sources
-- Active input is highlighted in blue
-- Supports HDMI, AV, Audio, AirPlay, Server, USB, and Tuner inputs
+### Quellenauswahl
+- Beliebige Eingangstaste klicken um Quelle zu wechseln
+- Aktive Quelle ist blau hervorgehoben
+- Unterstützt HDMI, AV, Audio, AirPlay, Server, USB und Tuner-Eingänge
 
-### Zone Control
-- Switch between Main Zone and Zone 2 using the tabs
-- Each zone has independent control
+### Zonen-Steuerung
+- Zwischen Hauptzone und Zone 2 mit den Tabs wechseln
+- Jede Zone hat unabhängige Steuerung
 
-### Scene Selection
-- Click Scene 1-4 buttons to activate preconfigured settings
-- Scenes combine input selection and DSP settings
+### Szenen-Auswahl
+- Szene 1-4 Buttons klicken um vorkonfigurierte Einstellungen zu aktivieren
+- Szenen kombinieren Quellenauswahl und DSP-Einstellungen
 
-## Supported Receivers
+## Unterstützte Receiver
 
-This application is designed for the Yamaha RX-V577 but should work with other Yamaha receivers that support the XML control protocol, including:
+Diese Anwendung ist für den Yamaha RX-V577 entwickelt, sollte aber auch mit anderen Yamaha-Receivern funktionieren, die das XML-Steuerungsprotokoll unterstützen:
 
-- RX-V series (RX-V473, RX-V573, RX-V673, RX-V773)
-- HTR series with network capability
-- Other network-enabled Yamaha AV receivers
+- RX-V Serie (RX-V473, RX-V573, RX-V673, RX-V773)
+- HTR Serie mit Netzwerkfähigkeit
+- Andere netzwerkfähige Yamaha AV-Receiver
 
-## Technical Details
+## Technische Details
 
-### XML Commands
-The application uses Yamaha's XML control protocol via HTTP POST requests to `/YamahaRemoteControl/ctrl`.
+### XML-Befehle
+Die Anwendung verwendet Yamahas XML-Steuerungsprotokoll über HTTP POST-Anfragen an `/YamahaRemoteControl/ctrl`.
 
-Example commands:
+Beispiel-Befehle:
 ```xml
 <!-- Power On -->
 <YAMAHA_AV cmd="PUT"><Main_Zone><Power_Control><Power>On</Power></Power_Control></Main_Zone></YAMAHA_AV>
@@ -233,36 +233,36 @@ Example commands:
 <YAMAHA_AV cmd="GET"><Main_Zone><Basic_Status>GetParam</Basic_Status></Main_Zone></YAMAHA_AV>
 ```
 
-### Network Requirements
-- Receiver and controlling device must be on the same network
-- HTTP requests to receiver IP address on port 80
-- No authentication required for local network access
+### Netzwerk-Anforderungen
+- Receiver und steuerndes Gerät müssen im selben Netzwerk sein
+- HTTP-Anfragen an Receiver IP-Adresse auf Port 80
+- Keine Authentifizierung für lokalen Netzwerkzugriff erforderlich
 
-## Troubleshooting
+## Problembehandlung
 
-### Connection Issues
-- **"Connection Failed"**: Verify the IP address is correct
-- **"Network error - check CORS settings"**: 
-  - Modern browsers may block cross-origin requests
-  - Consider using a local web server or proxy
-  - Some browsers work better than others for local network requests
+### Verbindungsprobleme
+- **"Verbindung fehlgeschlagen"**: IP-Adresse auf Korrektheit überprüfen
+- **"Netzwerkfehler - CORS-Einstellungen prüfen"**: 
+  - Moderne Browser blockieren möglicherweise Cross-Origin-Anfragen
+  - Lokalen Webserver oder Proxy verwenden
+  - Manche Browser funktionieren besser für lokale Netzwerkanfragen
 
-### Power On Issues
-- **Power on doesn't work**: 
-  - RX-V577 may not respond to network commands when in standby mode over Wi-Fi
-  - Try using Ethernet connection for more reliable power on
-  - Physical power button or IR remote may be needed for initial power on
+### Einschaltprobleme
+- **Einschalten funktioniert nicht**: 
+  - RX-V577 reagiert möglicherweise nicht auf Netzwerkbefehle im Standby über Wi-Fi
+  - Ethernet-Verbindung für zuverlässigeres Einschalten verwenden
+  - Physischer Power-Button oder IR-Fernbedienung für erstes Einschalten nötig
 
-### Status Not Updating
-- Check network connectivity
-- Verify receiver is powered on
-- Status polling occurs every 5 seconds automatically
+### Status wird nicht aktualisiert
+- Netzwerkverbindung überprüfen
+- Sicherstellen, dass Receiver eingeschaltet ist
+- Status-Polling erfolgt automatisch alle 5 Sekunden
 
-## CORS and Security
+## CORS und Sicherheit
 
-Due to browser security restrictions, you may encounter CORS (Cross-Origin Resource Sharing) issues when making requests to the receiver. Solutions:
+Aufgrund von Browser-Sicherheitsbeschränkungen können CORS (Cross-Origin Resource Sharing) Probleme bei Anfragen an den Receiver auftreten. Lösungen:
 
-1. **Use a local web server**:
+1. **Lokalen Webserver verwenden**:
    ```bash
    # Python 3
    python -m http.server 8000
@@ -271,20 +271,20 @@ Due to browser security restrictions, you may encounter CORS (Cross-Origin Resou
    npx http-server
    ```
 
-2. **Browser flags** (for testing only):
+2. **Browser-Flags** (nur zum Testen):
    - Chrome: `--disable-web-security --user-data-dir=/tmp/chrome_dev`
-   - Not recommended for regular use
+   - Nicht für reguläre Nutzung empfohlen
 
-3. **Proxy setup**: Configure a local proxy to forward requests to the receiver
+3. **Proxy-Setup**: Lokalen Proxy konfigurieren um Anfragen an Receiver weiterzuleiten
 
-## Browser Compatibility
+## Browser-Kompatibilität
 
-- Chrome/Chromium: Best compatibility
-- Firefox: Good compatibility
-- Safari: Limited due to stricter CORS policies
-- Edge: Good compatibility
+- Chrome/Chromium: Beste Kompatibilität
+- Firefox: Gute Kompatibilität
+- Safari: Eingeschränkt durch strengere CORS-Richtlinien
+- Edge: Gute Kompatibilität
 
-## PM2 Management
+## PM2 Verwaltung
 
 ```bash
 # Status anzeigen
@@ -303,7 +303,7 @@ pm2 stop yahama-amp
 pm2 delete yahama-amp
 ```
 
-## Raspberry Pi Deployment
+## Raspberry Pi Bereitstellung
 
 Das Projekt läuft optimal auf einem Raspberry Pi als dedizierter Yamaha-Controller:
 
