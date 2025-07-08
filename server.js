@@ -10,8 +10,24 @@ const PORT = process.env.PORT || 5001;
 // Enable CORS for all routes
 app.use(cors());
 
-// Serve static files from current directory
-app.use(express.static(path.join(__dirname)));
+// Serve static files from current directory with proper headers for PWA
+app.use(express.static(path.join(__dirname), {
+    setHeaders: (res, path) => {
+        // Set appropriate cache headers for PWA files
+        if (path.endsWith('manifest.json')) {
+            res.setHeader('Content-Type', 'application/manifest+json');
+            res.setHeader('Cache-Control', 'no-cache');
+        }
+        if (path.endsWith('sw.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+            res.setHeader('Cache-Control', 'no-cache');
+        }
+        // Cache static assets for PWA
+        if (path.endsWith('.png') || path.endsWith('.ico')) {
+            res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year
+        }
+    }
+}));
 
 // Config file path
 const CONFIG_FILE = path.join(__dirname, 'receiver-config.json');

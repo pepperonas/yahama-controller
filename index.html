@@ -5,9 +5,9 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
       <!-- Primary Meta Tags -->
-      <title>Yamaha RX-V577 Advanced Control - Professionelle AV-Receiver Steuerung</title>
-      <meta name="title" content="Yamaha RX-V577 Advanced Control - Professionelle AV-Receiver Steuerung">
-      <meta name="description" content="Moderne Web-App zur vollständigen Kontrolle Ihres Yamaha RX-V577 AV-Receivers. DSP-Programme, 7-Band-Equalizer, Lautsprecher-Konfiguration, HDMI-Einstellungen und mehr. 
+      <title>RX-V577 by mrx3k1 Advanced Control - Professionelle AV-Receiver Steuerung</title>
+      <meta name="title" content="RX-V577 by mrx3k1 Advanced Control - Professionelle AV-Receiver Steuerung">
+      <meta name="description" content="Moderne Web-App zur vollständigen Kontrolle Ihres RX-V577 by mrx3k1 AV-Receivers. DSP-Programme, 7-Band-Equalizer, Lautsprecher-Konfiguration, HDMI-Einstellungen und mehr. 
   Responsive Design mit Dark Theme.">
       <meta name="keywords" content="Yamaha, RX-V577, AV-Receiver, Steuerung, DSP, Equalizer, HDMI, Surround Sound, Home Theater, Audio Control, Web App, Raspberry Pi">
       <meta name="author" content="Yamaha Receiver Control App">
@@ -18,8 +18,8 @@
       <!-- Open Graph / Facebook -->
       <meta property="og:type" content="website">
       <meta property="og:url" content="http://localhost:5001/">
-      <meta property="og:title" content="Yamaha RX-V577 Advanced Control - Professionelle AV-Receiver Steuerung">
-      <meta property="og:description" content="Moderne Web-App zur vollständigen Kontrolle Ihres Yamaha RX-V577 AV-Receivers mit DSP-Programmen, Equalizer, Lautsprecher-Konfiguration und HDMI-Einstellungen.">
+      <meta property="og:title" content="RX-V577 by mrx3k1 Advanced Control - Professionelle AV-Receiver Steuerung">
+      <meta property="og:description" content="Moderne Web-App zur vollständigen Kontrolle Ihres RX-V577 by mrx3k1 AV-Receivers mit DSP-Programmen, Equalizer, Lautsprecher-Konfiguration und HDMI-Einstellungen.">
       <meta property="og:site_name" content="Yamaha Receiver Control">
       <meta property="og:locale" content="de_DE">
 
@@ -39,6 +39,7 @@
       <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
       <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
       <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+
 
       <style>
           :root {
@@ -726,7 +727,7 @@
   </head>
   <body>
       <header class="header">
-          <h1>Yamaha RX-V577</h1>
+          <h1>🔊 RX-V577 by mrx3k1</h1>
           <div class="card" id="connection-card">
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <h3 style="margin: 0; font-size: 1rem;">Verbindung</h3>
@@ -930,32 +931,23 @@
                   <div class="grid grid-3">
                       <div>
                           <h3>Subwoofer</h3>
-                          <div class="slider-container">
-                              <div class="slider-label">
-                                  <span>Subwoofer Level</span>
-                                  <span id="subwoofer-value">0 dB</span>
-                              </div>
-                              <input type="range" class="slider" id="subwoofer-slider" min="-10" max="10" value="0" step="0.5">
+                          <div class="stat-card">
+                              <div class="stat-value" id="subwoofer-value">0 dB</div>
+                              <div class="stat-label">Subwoofer Level (YPAO)</div>
                           </div>
                       </div>
                       <div>
                           <h3>Center Lautsprecher</h3>
-                          <div class="slider-container">
-                              <div class="slider-label">
-                                  <span>Center Level</span>
-                                  <span id="center-value">0 dB</span>
-                              </div>
-                              <input type="range" class="slider" id="center-slider" min="-10" max="10" value="0" step="0.5">
+                          <div class="stat-card">
+                              <div class="stat-value" id="center-value">0 dB</div>
+                              <div class="stat-label">Center Level (YPAO)</div>
                           </div>
                       </div>
                       <div>
                           <h3>Surround Level</h3>
-                          <div class="slider-container">
-                              <div class="slider-label">
-                                  <span>Surround Level</span>
-                                  <span id="surround-value">0 dB</span>
-                              </div>
-                              <input type="range" class="slider" id="surround-slider" min="-10" max="10" value="0" step="0.5">
+                          <div class="stat-card">
+                              <div class="stat-value" id="surround-value">0 dB</div>
+                              <div class="stat-label">Surround Level (YPAO)</div>
                           </div>
                       </div>
                   </div>
@@ -963,24 +955,20 @@
 
               <!-- Audio Settings -->
               <div class="card">
-                  <h2>Audio-Einstellungen</h2>
+                  <h2>Audio-Einstellungen (Anzeige)</h2>
                   <div class="grid grid-2">
                       <div>
                           <h3>Dynamic Range Control</h3>
-                          <select class="form-select" id="drc-mode">
-                              <option value="Off">Aus</option>
-                              <option value="Standard">Standard</option>
-                              <option value="Maximum">Maximum</option>
-                          </select>
+                          <div class="stat-card">
+                              <div class="stat-value" id="drc-value">Aus</div>
+                              <div class="stat-label">DRC Status (YPAO)</div>
+                          </div>
                       </div>
                       <div>
                           <h3>Lip Sync Delay</h3>
-                          <div class="slider-container">
-                              <div class="slider-label">
-                                  <span>Audio Delay</span>
-                                  <span id="lipsync-value">0 ms</span>
-                              </div>
-                              <input type="range" class="slider" id="lipsync-slider" min="0" max="250" value="0" step="10">
+                          <div class="stat-card">
+                              <div class="stat-value" id="lipsync-value">0 ms</div>
+                              <div class="stat-label">Audio Delay (YPAO)</div>
                           </div>
                       </div>
                   </div>
@@ -1039,6 +1027,26 @@
                               <div class="toggle-switch" id="extra-bass-toggle"></div>
                               <label class="toggle-label">Extra Bass</label>
                           </div>
+                          <div>
+                              <h3>Bass Control</h3>
+                              <div class="slider-container">
+                                  <div class="slider-label">
+                                      <span>Bass</span>
+                                      <span id="bass-value">0 dB</span>
+                                  </div>
+                                  <input type="range" class="slider" id="bass-slider" min="-10" max="10" value="0" step="0.5">
+                              </div>
+                          </div>
+                          <div>
+                              <h3>Treble Control</h3>
+                              <div class="slider-container">
+                                  <div class="slider-label">
+                                      <span>Treble</span>
+                                      <span id="treble-value">0 dB</span>
+                                  </div>
+                                  <input type="range" class="slider" id="treble-slider" min="-10" max="10" value="0" step="0.5">
+                              </div>
+                          </div>
                           <div class="toggle-container">
                               <div class="toggle-switch" id="music-enhancer-toggle"></div>
                               <label class="toggle-label">Compressed Music Enhancer</label>
@@ -1046,6 +1054,10 @@
                           <div class="toggle-container">
                               <div class="toggle-switch" id="pure-direct-toggle"></div>
                               <label class="toggle-label">Pure Direct Mode</label>
+                          </div>
+                          <div class="toggle-container">
+                              <div class="toggle-switch" id="straight-mode-toggle"></div>
+                              <label class="toggle-label">Straight Mode</label>
                           </div>
                           <div class="toggle-container">
                               <div class="toggle-switch" id="vps-toggle"></div>
@@ -1071,13 +1083,13 @@
                               <label class="toggle-label">Subwoofer Phase (0°/180°)</label>
                           </div>
                           <div>
-                              <h3>Auto Power Standby</h3>
-                              <select class="form-select" id="auto-standby">
-                                  <option value="Off">Aus</option>
-                                  <option value="2h">2 Stunden</option>
-                                  <option value="4h">4 Stunden</option>
-                                  <option value="8h">8 Stunden</option>
-                                  <option value="12h">12 Stunden</option>
+                              <h3>Sleep Timer</h3>
+                              <select class="form-select" id="sleep-timer">
+                                  <option value="0">Aus</option>
+                                  <option value="30">30 Minuten</option>
+                                  <option value="60">60 Minuten</option>
+                                  <option value="90">90 Minuten</option>
+                                  <option value="120">120 Minuten</option>
                               </select>
                           </div>
                       </div>
@@ -1214,17 +1226,13 @@
                       eqSliders: document.querySelectorAll('.eq-slider'),
                       eqReset: document.getElementById('eq-reset'),
 
-                      // Speaker Configuration
-                      subwooferSlider: document.getElementById('subwoofer-slider'),
+                      // Speaker Configuration (Display Only)
                       subwooferValue: document.getElementById('subwoofer-value'),
-                      centerSlider: document.getElementById('center-slider'),
                       centerValue: document.getElementById('center-value'),
-                      surroundSlider: document.getElementById('surround-slider'),
                       surroundValue: document.getElementById('surround-value'),
 
-                      // Audio Settings
-                      drcMode: document.getElementById('drc-mode'),
-                      lipsyncSlider: document.getElementById('lipsync-slider'),
+                      // Audio Settings (Display Only)
+                      drcValue: document.getElementById('drc-value'),
                       lipsyncValue: document.getElementById('lipsync-value'),
 
                       // HDMI Settings
@@ -1233,13 +1241,18 @@
 
                       // Extended Functions
                       extraBassToggle: document.getElementById('extra-bass-toggle'),
+                      bassSlider: document.getElementById('bass-slider'),
+                      bassValue: document.getElementById('bass-value'),
+                      trebleSlider: document.getElementById('treble-slider'),
+                      trebleValue: document.getElementById('treble-value'),
                       musicEnhancerToggle: document.getElementById('music-enhancer-toggle'),
                       pureDirectToggle: document.getElementById('pure-direct-toggle'),
+                      straightModeToggle: document.getElementById('straight-mode-toggle'),
                       vpsToggle: document.getElementById('vps-toggle'),
                       biAmpToggle: document.getElementById('bi-amp-toggle'),
                       ecoModeToggle: document.getElementById('eco-mode-toggle'),
                       subwooferPhaseToggle: document.getElementById('subwoofer-phase-toggle'),
-                      autoStandby: document.getElementById('auto-standby'),
+                      sleepTimer: document.getElementById('sleep-timer'),
                       presetMovie: document.getElementById('preset-movie'),
                       presetMusic: document.getElementById('preset-music'),
                       presetGaming: document.getElementById('preset-gaming'),
@@ -1353,37 +1366,7 @@
 
                   this.elements.eqReset.addEventListener('click', () => this.resetEqualizer());
 
-                  // Speaker Configuration
-                  this.elements.subwooferSlider.addEventListener('input', (e) => {
-                      this.elements.subwooferValue.textContent = `${e.target.value} dB`;
-                  });
-                  this.elements.subwooferSlider.addEventListener('change', (e) => {
-                      this.setSubwooferLevel(e.target.value);
-                  });
-
-                  this.elements.centerSlider.addEventListener('input', (e) => {
-                      this.elements.centerValue.textContent = `${e.target.value} dB`;
-                  });
-                  this.elements.centerSlider.addEventListener('change', (e) => {
-                      this.setCenterLevel(e.target.value);
-                  });
-
-                  this.elements.surroundSlider.addEventListener('input', (e) => {
-                      this.elements.surroundValue.textContent = `${e.target.value} dB`;
-                  });
-                  this.elements.surroundSlider.addEventListener('change', (e) => {
-                      this.setSurroundLevel(e.target.value);
-                  });
-
-                  // Audio Settings
-                  this.elements.drcMode.addEventListener('change', (e) => this.setDRC(e.target.value));
-
-                  this.elements.lipsyncSlider.addEventListener('input', (e) => {
-                      this.elements.lipsyncValue.textContent = `${e.target.value} ms`;
-                  });
-                  this.elements.lipsyncSlider.addEventListener('change', (e) => {
-                      this.setLipSync(e.target.value);
-                  });
+                  // Speaker Configuration and Audio Settings are now display-only (YPAO controlled)
 
                   // HDMI Settings
                   this.elements.hdmiAudioFormat.addEventListener('change', (e) => this.setHDMIAudioFormat(e.target.value));
@@ -1396,13 +1379,30 @@
 
                   // Extended Functions
                   this.elements.extraBassToggle.addEventListener('click', () => this.toggleExtraBass());
+                  
+                  // Bass/Treble Controls
+                  this.elements.bassSlider.addEventListener('input', (e) => {
+                      this.elements.bassValue.textContent = `${e.target.value} dB`;
+                  });
+                  this.elements.bassSlider.addEventListener('change', (e) => {
+                      this.setBassLevel(e.target.value);
+                  });
+                  
+                  this.elements.trebleSlider.addEventListener('input', (e) => {
+                      this.elements.trebleValue.textContent = `${e.target.value} dB`;
+                  });
+                  this.elements.trebleSlider.addEventListener('change', (e) => {
+                      this.setTrebleLevel(e.target.value);
+                  });
+                  
                   this.elements.musicEnhancerToggle.addEventListener('click', () => this.toggleMusicEnhancer());
                   this.elements.pureDirectToggle.addEventListener('click', () => this.togglePureDirect());
+                  this.elements.straightModeToggle.addEventListener('click', () => this.toggleStraightMode());
                   this.elements.vpsToggle.addEventListener('click', () => this.toggleVPS());
                   this.elements.biAmpToggle.addEventListener('click', () => this.toggleBiAmp());
                   this.elements.ecoModeToggle.addEventListener('click', () => this.toggleEcoMode());
                   this.elements.subwooferPhaseToggle.addEventListener('click', () => this.toggleSubwooferPhase());
-                  this.elements.autoStandby.addEventListener('change', (e) => this.setAutoStandby(e.target.value));
+                  this.elements.sleepTimer.addEventListener('change', (e) => this.setSleepTimer(e.target.value));
 
                   // Presets
                   this.elements.presetMovie.addEventListener('click', () => this.loadQuickPreset('movie'));
@@ -1707,6 +1707,31 @@
                   this.showMessage('Equalizer zurückgesetzt', 'success');
               }
 
+              // Bass and Treble Controls
+              async setBassLevel(level) {
+                  const bassValue = Math.round(level * 10);
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><Tone><Bass><Val>${bassValue}</Val><Exp>1</Exp><Unit>dB</Unit></Bass></Tone></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.showMessage(`Bass Level: ${level} dB`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des Bass Levels: ' + error.message, 'error');
+                  }
+              }
+
+              async setTrebleLevel(level) {
+                  const trebleValue = Math.round(level * 10);
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><Tone><Treble><Val>${trebleValue}</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.showMessage(`Treble Level: ${level} dB`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des Treble Levels: ' + error.message, 'error');
+                  }
+              }
+
               async setSubwooferLevel(level) {
                   const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Volume><Subwoofer><Lvl><Val>${Math.round(level *
   10)}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Subwoofer></Volume></${this.currentZone}></YAMAHA_AV>`;
@@ -1744,7 +1769,7 @@
               }
 
               async setDRC(mode) {
-                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><DRC>${mode}</DRC></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><YPAO><VOL><Adaptive_DRC>${mode}</Adaptive_DRC></VOL></YPAO></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
 
                   try {
                       await this.sendCommand(xml);
@@ -1755,8 +1780,7 @@
               }
 
               async setLipSync(delay) {
-                  const xml = `<YAMAHA_AV
-  cmd="PUT"><${this.currentZone}><Sound_Video><Lipsync><Audio_Delay><Val>${delay}</Val><Unit>ms</Unit></Audio_Delay></Lipsync></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><YPAO><Audio_Delay><Val>${delay}</Val><Unit>ms</Unit></Audio_Delay></YPAO></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
 
                   try {
                       await this.sendCommand(xml);
@@ -1868,7 +1892,7 @@
               async togglePureDirect() {
                   const isActive = this.elements.pureDirectToggle.classList.contains('active');
                   const newState = isActive ? 'Off' : 'On';
-                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><Pure_Direct><Mode>${newState}</Mode></Pure_Direct></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><Direct><Mode>${newState}</Mode></Direct></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
 
                   try {
                       await this.sendCommand(xml);
@@ -1876,6 +1900,20 @@
                       this.showMessage(`Pure Direct ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
                   } catch (error) {
                       this.showMessage('Fehler beim Setzen des Pure Direct: ' + error.message, 'error');
+                  }
+              }
+
+              async toggleStraightMode() {
+                  const isActive = this.elements.straightModeToggle.classList.contains('active');
+                  const newState = isActive ? 'Off' : 'On';
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Surround><Program_Sel><Current><Straight>${newState}</Straight></Current></Program_Sel></Surround></${this.currentZone}></YAMAHA_AV>`;
+
+                  try {
+                      await this.sendCommand(xml);
+                      this.elements.straightModeToggle.classList.toggle('active');
+                      this.showMessage(`Straight Mode ${newState === 'On' ? 'aktiviert' : 'deaktiviert'}`, 'success');
+                  } catch (error) {
+                      this.showMessage('Fehler beim Setzen des Straight Mode: ' + error.message, 'error');
                   }
               }
 
@@ -1936,14 +1974,15 @@
                   }
               }
 
-              async setAutoStandby(value) {
-                  const xml = `<YAMAHA_AV cmd="PUT"><System><Power_Control><Auto_Power_Standby>${value}</Auto_Power_Standby></Power_Control></System></YAMAHA_AV>`;
+              async setSleepTimer(minutes) {
+                  const sleepValue = minutes === '0' ? 'Off' : `${minutes} min`;
+                  const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Power_Control><Sleep>${sleepValue}</Sleep></Power_Control></${this.currentZone}></YAMAHA_AV>`;
 
                   try {
                       await this.sendCommand(xml);
-                      this.showMessage(`Auto Standby: ${value}`, 'success');
+                      this.showMessage(`Sleep Timer: ${sleepValue}`, 'success');
                   } catch (error) {
-                      this.showMessage('Fehler beim Setzen des Auto Standby: ' + error.message, 'error');
+                      this.showMessage('Fehler beim Setzen des Sleep Timers: ' + error.message, 'error');
                   }
               }
 
@@ -2030,6 +2069,7 @@
 
           // Initialize the application
           const receiver = new YamahaAdvancedReceiver();
+
       </script>
   </body>
   </html>
