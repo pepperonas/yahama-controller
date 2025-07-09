@@ -1,4 +1,4 @@
-# Yamaha RX-V577 Advanced Control
+# 🎛️ Yamaha RX-V577 Controller
 
 Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V577 AV-Receivers mit erweiterten Funktionen und modernem Dark Theme Interface.
 
@@ -101,14 +101,14 @@ Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V57
 
 ```bash
 # Repository klonen
-git clone https://github.com/pepperonas/yahama-controller.git
-cd yahama-controller
+git clone https://github.com/yourusername/yamaha-rx-v577-controller.git
+cd yamaha-rx-v577-controller
 
 # Dependencies installieren
 npm install
 
 # PM2 Process starten
-pm2 start server.js --name yahama-amp
+pm2 start server.js --name yamaha-controller
 
 # PM2 Auto-Start aktivieren
 pm2 startup
@@ -154,7 +154,7 @@ pm2 save
 ## Projektstruktur
 
 ```
-yahama-amp/
+yamaha-rx-v577-controller/
 ├── index.html              # Haupt-Interface mit Advanced Controls
 ├── server.js               # Express.js Server mit CORS Proxy
 ├── package.json            # Node.js Dependencies
@@ -291,21 +291,21 @@ Aufgrund von Browser-Sicherheitsbeschränkungen können CORS (Cross-Origin Resou
 pm2 status
 
 # Logs anzeigen
-pm2 logs yahama-amp
+pm2 logs yamaha-controller
 
 # Neustart
-pm2 restart yahama-amp
+pm2 restart yamaha-controller
 
 # Stoppen
-pm2 stop yahama-amp
+pm2 stop yamaha-controller
 
 # Entfernen
-pm2 delete yahama-amp
+pm2 delete yamaha-controller
 ```
 
 ## Raspberry Pi Bereitstellung
 
-Das Projekt läuft optimal auf einem Raspberry Pi als dedizierter Yamaha-Controller:
+Das Projekt läuft optimal auf einem Raspberry Pi als dedizierter RX-V577 Controller:
 
 1. **Raspberry Pi OS** mit Node.js und PM2
 2. **Netzwerkzugriff** über lokale IP-Adresse

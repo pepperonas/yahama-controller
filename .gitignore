@@ -88,8 +88,11 @@ typings/
 # PM2 logs
 .pm2/
 
-# Ignore the old yamaha-amp directory
-yamaha-amp/
+# Runtime configuration files
+receiver-config.json
+
+# Core dumps (Linux/Unix)
+core
 
 # OS generated files
 .DS_Store
@@ -105,3 +108,8 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+*~
+
+# Logs
+logs
+*.log
