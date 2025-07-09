@@ -10,21 +10,31 @@ const PORT = process.env.PORT || 5001;
 // Enable CORS for all routes
 app.use(cors());
 
-// Serve static files from current directory with proper headers for PWA
-app.use(express.static(path.join(__dirname), {
-    setHeaders: (res, path) => {
+// Serve static files from public directory with proper headers for PWA
+app.use(express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, filePath) => {
         // Set appropriate cache headers for PWA files
-        if (path.endsWith('manifest.json')) {
+        if (filePath.endsWith('manifest.json')) {
             res.setHeader('Content-Type', 'application/manifest+json');
             res.setHeader('Cache-Control', 'no-cache');
         }
-        if (path.endsWith('sw.js')) {
+        if (filePath.endsWith('sw.js')) {
             res.setHeader('Content-Type', 'application/javascript');
             res.setHeader('Cache-Control', 'no-cache');
         }
         // Cache static assets for PWA
-        if (path.endsWith('.png') || path.endsWith('.ico')) {
+        if (filePath.endsWith('.png') || filePath.endsWith('.ico')) {
             res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year
+        }
+    }
+}));
+
+// Also serve from root directory for index.html and other root files
+app.use(express.static(path.join(__dirname), {
+    setHeaders: (res, filePath) => {
+        // Don't cache HTML files
+        if (filePath.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-cache');
         }
     }
 }));

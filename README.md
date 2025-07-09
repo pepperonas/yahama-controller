@@ -4,9 +4,9 @@ Eine professionelle Web-Anwendung zur vollständigen Steuerung des Yamaha RX-V57
 
 > **Hinweis**: Dieses Projekt trägt bewusst nicht den offiziellen "Yamaha"-Markennamen im Projektverzeichnis oder Code, um lizenzrechtliche Konflikte zu vermeiden. Es handelt sich um eine inoffizielle, Open-Source-Implementierung für den persönlichen Gebrauch.
 
-![Yamaha Control Interface](yahama-mockup-1.png)
+![Yamaha Control Interface](public/assets/yahama-mockup-1.png)
 
-![Yamaha Control Interface - Extended Features](yamaha-mockup-2.png)
+![Yamaha Control Interface - Extended Features](public/assets/yamaha-mockup-2.png)
 
 ## Features
 
@@ -155,14 +155,22 @@ pm2 save
 
 ```
 yamaha-rx-v577-controller/
+├── public/                 # Statische Assets
+│   ├── assets/            # Bilder und andere Assets
+│   │   ├── yahama-mockup-1.png    # Mockup-Bild 1
+│   │   └── yamaha-mockup-2.png    # Mockup-Bild 2
+│   ├── favicon.ico        # Website Icon
+│   ├── favicon-16x16.png  # 16x16 Favicon
+│   ├── favicon-32x32.png  # 32x32 Favicon
+│   ├── apple-touch-icon.png       # iOS App Icon
+│   ├── android-chrome-192x192.png # Android App Icon (192x192)
+│   └── android-chrome-512x512.png # Android App Icon (512x512)
 ├── index.html              # Haupt-Interface mit Advanced Controls
 ├── server.js               # Express.js Server mit CORS Proxy
 ├── package.json            # Node.js Dependencies
-├── receiver-config.json    # Gespeicherte Receiver-IP-Adresse
+├── receiver-config.json    # Gespeicherte Receiver-IP-Adresse (gitignore)
 ├── deploy-raspi.sh         # Deployment-Script für Raspberry Pi
-├── favicon.*               # Favicon-Dateien (verschiedene Größen)
-├── android-chrome-*.png    # Android App Icons
-├── apple-touch-icon.png    # iOS App Icon
+├── .gitignore             # Git Ignore-Regeln
 └── README.md              # Diese Dokumentation
 ```
 
