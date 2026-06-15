@@ -770,7 +770,26 @@
                   min-width: 100px;
               }
           }
-      </style>
+      
+/* ===== MD3 Expressive Motion ===== */
+@keyframes md-enter{0%{opacity:0;transform:translateY(34px) scale(.92)}55%{opacity:1;transform:translateY(-8px) scale(1.02)}78%{transform:translateY(3px) scale(.996)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes md-drop{0%{opacity:0;transform:translateY(-20px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes md-pulse-ring{0%{box-shadow:0 0 0 0 var(--accent-green,#7ddfa6)}70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@keyframes md-breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.16)}}
+h1,.header,header,.app-header{animation:md-drop .55s var(--ease-emph,cubic-bezier(.2,0,0,1)) backwards}
+.card,.control-section,section{animation:md-enter .64s var(--ease-emph,cubic-bezier(.2,0,0,1)) backwards}
+.card:nth-of-type(2),.control-section:nth-of-type(2),section:nth-of-type(2){animation-delay:.07s}
+.card:nth-of-type(3),.control-section:nth-of-type(3),section:nth-of-type(3){animation-delay:.14s}
+.card:nth-of-type(4),.control-section:nth-of-type(4),section:nth-of-type(4){animation-delay:.21s}
+.card:nth-of-type(5),.control-section:nth-of-type(5),section:nth-of-type(5){animation-delay:.28s}
+.card:nth-of-type(6),.control-section:nth-of-type(6),section:nth-of-type(6){animation-delay:.35s}
+.card:nth-of-type(7),.control-section:nth-of-type(7),section:nth-of-type(7){animation-delay:.42s}
+.status-dot{animation:md-pulse-ring 2.2s ease-out infinite}
+.active,.btn.active,.mode.active{animation:md-breathe 2.4s ease-in-out infinite}
+.card:hover,.control-section:hover{transform:translateY(-3px)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
   </head>
   <body>
       <header class="header">
