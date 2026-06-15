@@ -1,0 +1,15 @@
+[Unit]
+Description=Yamaha Receiver Control (Go) — RX-V577 proxy + PWA
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/apps/yahama-controller
+ExecStart=/home/pi/apps/yahama-controller/yamaha-controller
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

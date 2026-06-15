@@ -4,3 +4,8 @@ logs/
 receiver-config.json
 index.html.backup
 index.html.backup2
+
+# Go build + runtime
+yamaha-controller
+bin/
+logs/
