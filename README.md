@@ -1,5 +1,11 @@
 # 🎛️ Yamaha RX-V577 Controller
 
+> **⚡ Update 2026-06 — Stack & UI**
+>
+> - **Backend:** schlankes **Go-Binary** (~7 MB, migriert von Node/Express). Serviert die PWA, `/api/health`, `/api/set-receiver-ip` und reverse-proxyt `/api/receiver/*` an den RX-V577. **systemd** `yamaha-controller`. Source: `main.go` (+ `/Users/martin/claude/yamaha-controller-go/`, Cross-Build `GOOS=linux GOARCH=arm64`).
+> - **UI:** **Material Design 3 Expressive** + Spring-Animationen.
+> - **Deploy:** Binary bauen → `scp` → `sudo systemctl restart yamaha-controller`
+
 <div align="center">
 
 ![Yamaha Controller](public/assets/social-preview.png)
