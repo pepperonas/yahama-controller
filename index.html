@@ -771,24 +771,70 @@
               }
           }
       
-/* ===== MD3 Expressive Motion ===== */
-@keyframes md-enter{0%{opacity:0;transform:translateY(34px) scale(.92)}55%{opacity:1;transform:translateY(-8px) scale(1.02)}78%{transform:translateY(3px) scale(.996)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes md-drop{0%{opacity:0;transform:translateY(-20px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes md-pulse-ring{0%{box-shadow:0 0 0 0 var(--accent-green,#7ddfa6)}70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
-@keyframes md-breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.16)}}
-h1,.header,header,.app-header{animation:md-drop .55s var(--ease-emph,cubic-bezier(.2,0,0,1)) backwards}
-.card,.control-section,section{animation:md-enter .64s var(--ease-emph,cubic-bezier(.2,0,0,1)) backwards}
-.card:nth-of-type(2),.control-section:nth-of-type(2),section:nth-of-type(2){animation-delay:.07s}
-.card:nth-of-type(3),.control-section:nth-of-type(3),section:nth-of-type(3){animation-delay:.14s}
-.card:nth-of-type(4),.control-section:nth-of-type(4),section:nth-of-type(4){animation-delay:.21s}
-.card:nth-of-type(5),.control-section:nth-of-type(5),section:nth-of-type(5){animation-delay:.28s}
-.card:nth-of-type(6),.control-section:nth-of-type(6),section:nth-of-type(6){animation-delay:.35s}
-.card:nth-of-type(7),.control-section:nth-of-type(7),section:nth-of-type(7){animation-delay:.42s}
-.status-dot{animation:md-pulse-ring 2.2s ease-out infinite}
-.active,.btn.active,.mode.active{animation:md-breathe 2.4s ease-in-out infinite}
-.card:hover,.control-section:hover{transform:translateY(-3px)}
-@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+/* MD3 Expressive Animations (2026-06-16) */
+:root { --md-ease-spatial: linear(0,0.009 1.2%,0.035 2.5%,0.158 6%,0.793 18.4%,0.984 23%,1.07 27%,1.104 31.5%,1.103 35%,1.07 41%,1.013 50%,0.991 57%,0.998 75%,1); --md-ease-effects: cubic-bezier(0.2,0,0,1); }
+@keyframes md-enter { from{opacity:0;transform:translateY(24px) scale(.96)} to{opacity:1;transform:none} }
+@keyframes md-breathe { 0%,100%{box-shadow:0 0 0 0 rgba(170,199,255,0)} 50%{box-shadow:0 0 26px 2px rgba(170,199,255,.35)} }
+@keyframes md-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(.7)} }
 
+/* Cards / panels: staggered spatial entrance */
+.card { animation: md-enter .5s var(--md-ease-spatial) backwards; }
+.card:nth-child(1){animation-delay:.04s} .card:nth-child(2){animation-delay:.10s}
+.card:nth-child(3){animation-delay:.16s} .card:nth-child(4){animation-delay:.22s}
+.card:nth-child(5){animation-delay:.28s} .card:nth-child(6){animation-delay:.34s}
+.card:nth-child(7){animation-delay:.40s} .card:nth-child(8){animation-delay:.46s}
+.stat-card { animation: md-enter .5s var(--md-ease-spatial) backwards; }
+.stat-card:nth-child(2){animation-delay:.06s} .stat-card:nth-child(3){animation-delay:.12s}
+.stat-card:nth-child(4){animation-delay:.18s}
+
+/* Buttons: springy press / hover lift */
+.btn, .power-button {
+    transition: transform .4s var(--md-ease-spatial), box-shadow .2s var(--md-ease-effects), filter .2s var(--md-ease-effects), background-color .3s ease, border-color .3s ease, color .3s ease;
+}
+.btn:active:not(:disabled), .power-button:active { transform: scale(.95); }
+.btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.06); }
+
+/* Active / on states: breathing glow */
+.power-button.on { animation: md-breathe 2.6s ease-in-out infinite; }
+.main-tab.active, .tab.active, .toggle-switch.active { animation: md-breathe 2.6s ease-in-out infinite; }
+
+/* Status / connection dots: pulse */
+.status-connected::before, .status-disconnected::before, .status-warning::before { animation: md-pulse 2s ease-in-out infinite; }
+
+/* Slider & toggle thumbs: spatial spring */
+.slider::-webkit-slider-thumb { transition: transform .5s var(--md-ease-spatial), background .3s ease, box-shadow .3s ease; }
+.slider::-moz-range-thumb { transition: transform .5s var(--md-ease-spatial), background .3s ease, box-shadow .3s ease; }
+.toggle-switch::after { transition: transform .5s var(--md-ease-spatial); }
+
+@media (prefers-reduced-motion: reduce) {
+    .card, .stat-card, .btn, .power-button, .power-button.on, .main-tab.active, .tab.active,
+    .toggle-switch.active, .status-connected::before, .status-disconnected::before, .status-warning::before,
+    .slider::-webkit-slider-thumb, .slider::-moz-range-thumb, .toggle-switch::after {
+        animation: none !important; transition: none !important;
+    }
+}
+
+/* ===== Obsessive-Detail Politur (2026-06-16) — additiv, kein Umbau =====
+   Klammer: tonale MD3-Flächen, die unter dem Cursor Licht fangen. ===== */
+:root{ --ease-quick:cubic-bezier(.2,0,0,1); }
+button:focus-visible,a[href]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role="button"]:focus-visible,[tabindex]:not([tabindex="-1"]):focus-visible{
+  outline:2px solid var(--accent-blue, var(--md-primary, #aac7ff))!important; outline-offset:3px!important;
+}
+button:focus:not(:focus-visible),a:focus:not(:focus-visible),[role="button"]:focus:not(:focus-visible){ outline:none; }
+h1,h2,h3{ text-wrap:balance; }
+@media (pointer:coarse){ button,.btn,[role="button"]{ min-height:44px; } }
+@media (hover:hover) and (pointer:fine){
+  .card,.stat-card{ position:relative; }
+  .card::after,.stat-card::after{ content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0; transition:opacity 240ms var(--ease-quick);
+    background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),
+      color-mix(in srgb, var(--accent-blue, var(--md-primary,#aac7ff)) 13%, transparent), transparent 60%); }
+  .card:hover::after,.stat-card:hover::after{ opacity:1; }
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important; }
+  .card::after,.stat-card::after{ display:none!important; }
+}
 </style>
   </head>
   <body>
@@ -2165,5 +2211,18 @@ h1,.header,header,.app-header{animation:md-drop .55s var(--ease-emph,cubic-bezie
     <footer style="text-align: center; padding: 20px; margin-top: 40px; color: rgba(255, 255, 255, 0.6); font-size: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
         Made with ❤️ by Martin Pfeffer
     </footer>
+<script>/* cursor-sheen (gated, rAF-throttled, additiv) */
+(function(){try{
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var sel='.card,.stat-card',el=null,x=0,y=0,q=false;
+  function f(){q=false;if(!el)return;var r=el.getBoundingClientRect();
+    el.style.setProperty('--mx',((x-r.left)/r.width*100)+'%');
+    el.style.setProperty('--my',((y-r.top)/r.height*100)+'%');}
+  document.addEventListener('pointermove',function(e){
+    var c=e.target.closest?e.target.closest(sel):null;el=c;x=e.clientX;y=e.clientY;
+    if(c&&!q){q=true;requestAnimationFrame(f);}
+  },{passive:true});
+}catch(_){}})();</script>
   </body>
   </html>
