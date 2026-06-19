@@ -76,11 +76,14 @@
               --surface-highest: #303137;
               --outline: #46474f;
               --accent-blue: #b3c5ff;            /* primary (vibrant) */
-              --on-primary: #0a285a;
+              --on-primary: #0a285a;             /* dark text ON the light primary */
               --accent-green: #7ddfa6;
+              --on-secondary: #00391c;           /* dark text ON the light green */
               --accent-red: #ffb4ab;
+              --on-danger: #690005;              /* dark text ON the light red */
               --text-primary: #e4e2e9;           /* on-surface */
               --text-secondary: #c5c6d0;         /* on-surface-variant */
+              --text-light: #c5c6d0;             /* alias used across markup */
               --ease-spring: linear(0,0.009 1.2%,0.035 2.5%,0.158 6%,0.793 18.4%,0.984 23%,1.07 27%,1.104 31.5%,1.103 35%,1.07 41%,1.013 50%,0.991 57%,0.998 75%,1);
               --ease-emph: cubic-bezier(0.2,0,0,1);
 
@@ -114,11 +117,18 @@
               --background-dark: #f8fafc;
               --background-darker: #f1f5f9;
               --card-background: #ffffff;
+              --surface-high: #e2e8f0;
+              --surface-highest: #cbd5e1;
+              --outline: #cbd5e1;
               --accent-blue: #3b82f6;
+              --on-primary: #ffffff;
               --accent-green: #10b981;
+              --on-secondary: #ffffff;
               --accent-red: #ef4444;
+              --on-danger: #ffffff;
               --text-primary: #1f2937;
               --text-secondary: #6b7280;
+              --text-light: #6b7280;
               
               --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
               --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -220,34 +230,31 @@
 
           .btn-primary {
               background-color: var(--accent-blue);
-              color: white;
+              color: var(--on-primary);
+              font-weight: 600;
           }
 
           .btn-primary:hover {
-              background-color: #5a7a9a;
-              transform: translateY(-1px);
               box-shadow: var(--shadow);
           }
 
           .btn-secondary {
               background-color: var(--accent-green);
-              color: white;
+              color: var(--on-secondary);
+              font-weight: 600;
           }
 
           .btn-secondary:hover {
-              background-color: #8aa47d;
-              transform: translateY(-1px);
               box-shadow: var(--shadow);
           }
 
           .btn-danger {
               background-color: var(--accent-red);
-              color: white;
+              color: var(--on-danger);
+              font-weight: 600;
           }
 
           .btn-danger:hover {
-              background-color: #d04f50;
-              transform: translateY(-1px);
               box-shadow: var(--shadow);
           }
 
@@ -257,9 +264,11 @@
               border: 2px solid var(--accent-blue);
           }
 
+          /* Outlined buttons stay outlined on hover (MD3) — the state layer
+             below tints them; no full fill that would flip text to unreadable. */
           .btn-outline:hover {
-              background-color: var(--accent-blue);
-              color: white;
+              background-color: color-mix(in srgb, var(--accent-blue) 12%, transparent);
+              color: var(--accent-blue);
           }
 
           .btn:disabled {
@@ -545,14 +554,17 @@
 
           .message.success {
               background-color: var(--accent-green);
+              color: var(--on-secondary);
           }
 
           .message.error {
               background-color: var(--accent-red);
+              color: var(--on-danger);
           }
 
           .message.info {
               background-color: var(--accent-blue);
+              color: var(--on-primary);
           }
 
           /* Responsive */
@@ -792,7 +804,7 @@
     transition: transform .4s var(--md-ease-spatial), box-shadow .2s var(--md-ease-effects), filter .2s var(--md-ease-effects), background-color .3s ease, border-color .3s ease, color .3s ease;
 }
 .btn:active:not(:disabled), .power-button:active { transform: scale(.95); }
-.btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.06); }
+.btn:hover:not(:disabled) { transform: translateY(-2px); }
 
 /* Active / on states: breathing glow */
 .power-button.on { animation: md-breathe 2.6s ease-in-out infinite; }
@@ -834,6 +846,83 @@ h1,h2,h3{ text-wrap:balance; }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important; }
   .card::after,.stat-card::after{ display:none!important; }
+}
+
+/* ============================================================
+   MD3 Expressive — Motion & Physics System (2026-06-20)
+   State layers + ripple + sliding tab indicator + active track.
+   Purely additive; markup & JS contracts untouched.
+   ============================================================ */
+:root{
+  --md-ease-spring-snappy: linear(0,0.012 1.3%,0.05 2.8%,0.2 6.4%,0.836 17.6%,1.02 22.4%,1.08 26.6%,1.092 30.9%,1.07 37.1%,0.998 51%,0.984 61%,1.001 81%,1);
+  --md-state-hover:.08; --md-state-press:.12;
+}
+
+/* --- State layers: a tonal overlay in the element's own text color,
+       so filled buttons darken and outlined/ghost buttons tint — always
+       theme-correct, never washes the label out. --- */
+.btn, .main-tab, .tab { position: relative; overflow: hidden; isolation: isolate; }
+.btn::before, .main-tab::before, .tab::before{
+  content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit;
+  background: currentColor; opacity:0; pointer-events:none;
+  transition: opacity .18s var(--md-ease-effects);
+}
+.btn:hover:not(:disabled)::before, .main-tab:hover::before, .tab:hover::before{ opacity: var(--md-state-hover); }
+.btn:active:not(:disabled)::before{ opacity: var(--md-state-press); }
+.btn > *, .main-tab > *, .tab > *{ position: relative; z-index: 1; }
+
+/* --- Ripple ink (spawned by JS on press) --- */
+.md-ripple{
+  position:absolute; border-radius:50%; background: currentColor;
+  opacity:.22; transform: scale(0); pointer-events:none; z-index:0;
+  animation: md-ripple .58s var(--md-ease-effects) forwards;
+}
+@keyframes md-ripple{ to{ transform: scale(2.4); opacity:0; } }
+
+/* --- Sliding tab indicator (JS-positioned shared element) --- */
+.main-tabs, .tabs{ position: relative; }
+.main-tab.active, .tab.active{ border-bottom-color: transparent; } /* the bar replaces the static underline */
+.tab-ind{
+  position:absolute; bottom:0; left:0; height:3px; width:0; opacity:0;
+  border-radius:3px 3px 0 0; background: var(--accent-blue); pointer-events:none;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-blue) 55%, transparent);
+  transition: transform .46s var(--md-ease-spring-snappy),
+              width .46s var(--md-ease-spring-snappy),
+              opacity .2s var(--md-ease-effects);
+}
+
+/* --- Sliders: filled active track + expressive thumb halo --- */
+input.slider{ background: var(--surface-high); transition: none; }
+.slider::-webkit-slider-thumb{ box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-blue) 40%, transparent); }
+.slider:hover::-webkit-slider-thumb{ box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent-blue) 18%, transparent); }
+.slider:active::-webkit-slider-thumb{ transform: scale(1.18); box-shadow: 0 0 0 12px color-mix(in srgb, var(--accent-blue) 24%, transparent); }
+.slider:hover::-moz-range-thumb{ box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent-blue) 18%, transparent); }
+
+/* --- Expressive toggle: the knob squashes as it travels (anticipation) --- */
+.toggle-switch{ overflow: hidden; }
+.toggle-switch::after{ transition: transform .5s var(--md-ease-spring-snappy), width .22s var(--md-ease-effects), border-radius .22s var(--md-ease-effects); }
+.toggle-switch:active::after{ width: 27px; border-radius: 11px; }
+
+/* --- Power button: an energy ring blooms outward on power-on --- */
+.power-button::after{
+  content:""; position:absolute; inset:-4px; border-radius:50%;
+  border:2px solid var(--accent-green); opacity:0; pointer-events:none;
+}
+.power-button.on::after{ animation: md-power-ring .75s var(--md-ease-spring-snappy); }
+@keyframes md-power-ring{ 0%{opacity:.8; transform:scale(.92)} 100%{opacity:0; transform:scale(1.55)} }
+
+/* --- Snackbar: spring up from below with a settle --- */
+.message{ transform: translateY(140%) scale(.92); transition: opacity .3s var(--md-ease-effects), transform .55s var(--md-ease-spring-snappy); }
+.message.show{ transform: translateY(0) scale(1); }
+
+/* --- Stat values: gentle pop when JS swaps the number --- */
+.stat-value{ transition: transform .4s var(--md-ease-spring-snappy), color .3s var(--md-ease-effects); }
+.stat-value.md-pop{ transform: scale(1.14); }
+
+@media (prefers-reduced-motion: reduce){
+  .md-ripple{ display:none!important; }
+  .tab-ind{ transition: opacity .01ms!important; }
+  .message, .toggle-switch::after, .power-button.on::after, .stat-value{ transition:none!important; animation:none!important; }
 }
 </style>
   </head>
@@ -2211,6 +2300,73 @@ h1,h2,h3{ text-wrap:balance; }
     <footer style="text-align: center; padding: 20px; margin-top: 40px; color: rgba(255, 255, 255, 0.6); font-size: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
         Made with ❤️ by Martin Pfeffer
     </footer>
+<script>/* MD3 Expressive motion drivers (ripple · tab-indicator · slider fill · stat pop) — additiv */
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- Ripple: event-delegated so it survives JS class swaps on buttons --- */
+  if(!reduce){
+    document.addEventListener('pointerdown', function(e){
+      var t = e.target.closest && e.target.closest('.btn, .main-tab, .tab');
+      if(!t || t.disabled) return;
+      var r = t.getBoundingClientRect();
+      var d = Math.max(r.width, r.height) * 2;
+      var ink = document.createElement('span');
+      ink.className = 'md-ripple';
+      ink.style.width = ink.style.height = d + 'px';
+      ink.style.left = (e.clientX - r.left - d/2) + 'px';
+      ink.style.top  = (e.clientY - r.top  - d/2) + 'px';
+      t.appendChild(ink);
+      ink.addEventListener('animationend', function(){ ink.remove(); });
+    }, {passive:true});
+  }
+
+  /* --- Sliding tab indicator: one bar per tab strip, tracks the active tab --- */
+  function setupIndicator(container){
+    if(!container) return;
+    var sel = container.classList.contains('main-tabs') ? '.main-tab' : '.tab';
+    var ind = document.createElement('div'); ind.className = 'tab-ind';
+    container.appendChild(ind);
+    function move(){
+      var a = container.querySelector(sel + '.active');
+      if(!a || !a.offsetWidth){ ind.style.opacity = 0; return; }
+      ind.style.opacity = 1;
+      ind.style.width = a.offsetWidth + 'px';
+      ind.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+    }
+    container.addEventListener('click', function(){ requestAnimationFrame(move); });
+    if('ResizeObserver' in window){ new ResizeObserver(move).observe(container); } // fires when strip becomes visible
+    window.addEventListener('resize', move);
+    requestAnimationFrame(move);
+  }
+  setupIndicator(document.getElementById('main-tabs'));
+  setupIndicator(document.getElementById('zone-tabs'));
+
+  /* --- Active-track fill for horizontal sliders (repaint covers remote/poll updates) --- */
+  function paint(s){
+    var min = +s.min, max = +s.max, v = +s.value;
+    if(max <= min) return;
+    var pct = Math.max(0, Math.min(100, (v - min) / (max - min) * 100));
+    s.style.background = 'linear-gradient(90deg, var(--accent-blue) ' + pct + '%, var(--surface-high) ' + pct + '%)';
+  }
+  var sliders = document.querySelectorAll('input.slider');
+  sliders.forEach(function(s){ paint(s); s.addEventListener('input', function(){ paint(s); }); });
+  setInterval(function(){ sliders.forEach(paint); }, 350); // catches values set programmatically
+
+  /* --- Stat-value pop when the displayed number changes --- */
+  if(!reduce){
+    document.querySelectorAll('.stat-value').forEach(function(el){
+      var last = el.textContent;
+      new MutationObserver(function(){
+        if(el.textContent === last) return;
+        last = el.textContent;
+        el.classList.remove('md-pop'); void el.offsetWidth; el.classList.add('md-pop');
+        setTimeout(function(){ el.classList.remove('md-pop'); }, 420);
+      }).observe(el, {childList:true, characterData:true, subtree:true});
+    });
+  }
+})();
+</script>
 <script>/* cursor-sheen (gated, rAF-throttled, additiv) */
 (function(){try{
   if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
