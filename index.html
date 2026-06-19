@@ -925,7 +925,7 @@ input.slider{ background: var(--surface-high); transition: none; }
 ::view-transition-old(root){ animation: none; z-index: 1; }
 ::view-transition-new(root){ animation: none; z-index: 2; }
 html.theme-anim::view-transition-new(root){
-  animation: md-theme-reveal .55s var(--md-ease-spatial) forwards;
+  animation: md-theme-reveal 1.15s var(--md-ease-effects) forwards;
 }
 @keyframes md-theme-reveal{
   from{ clip-path: circle(0 at var(--r-x,100%) var(--r-y,0)); }
