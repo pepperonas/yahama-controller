@@ -919,6 +919,23 @@ input.slider{ background: var(--surface-high); transition: none; }
 .stat-value{ transition: transform .4s var(--md-ease-spring-snappy), color .3s var(--md-ease-effects); }
 .stat-value.md-pop{ transform: scale(1.14); }
 
+/* --- Theme switch: MD3 Expressive circular reveal (View Transitions API).
+       The incoming theme is clipped to a circle that blooms out from the
+       toggle button and grows to cover the viewport. --- */
+::view-transition-old(root){ animation: none; z-index: 1; }
+::view-transition-new(root){ animation: none; z-index: 2; }
+html.theme-anim::view-transition-new(root){
+  animation: md-theme-reveal .55s var(--md-ease-spatial) forwards;
+}
+@keyframes md-theme-reveal{
+  from{ clip-path: circle(0 at var(--r-x,100%) var(--r-y,0)); }
+  to  { clip-path: circle(var(--r-end,170vmax) at var(--r-x,100%) var(--r-y,0)); }
+}
+@media (prefers-reduced-motion: reduce){
+  html.theme-anim::view-transition-old(root),
+  html.theme-anim::view-transition-new(root){ animation: none!important; }
+}
+
 @media (prefers-reduced-motion: reduce){
   .md-ripple{ display:none!important; }
   .tab-ind{ transition: opacity .01ms!important; }
@@ -2259,9 +2276,28 @@ input.slider{ background: var(--surface-high); transition: none; }
               }
               
               toggleTheme() {
-                  this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
-                  this.applyTheme(this.currentTheme);
-                  localStorage.setItem('theme', this.currentTheme);
+                  const next = this.currentTheme === 'dark' ? 'light' : 'dark';
+                  const apply = () => {
+                      this.currentTheme = next;
+                      this.applyTheme(next);
+                      localStorage.setItem('theme', next);
+                  };
+
+                  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+                  // MD3 Expressive circular reveal from the toggle button.
+                  if (!document.startViewTransition || reduce) { apply(); return; }
+
+                  const r = this.elements.themeToggle.getBoundingClientRect();
+                  const x = r.left + r.width / 2;
+                  const y = r.top + r.height / 2;
+                  const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+                  const root = document.documentElement;
+                  root.style.setProperty('--r-x', x + 'px');
+                  root.style.setProperty('--r-y', y + 'px');
+                  root.style.setProperty('--r-end', end + 'px');
+                  root.classList.add('theme-anim');
+                  const t = document.startViewTransition(apply);
+                  t.finished.finally(() => root.classList.remove('theme-anim'));
               }
               
               applyTheme(theme) {
