@@ -919,6 +919,78 @@ input.slider{ background: var(--surface-high); transition: none; }
 .stat-value{ transition: transform .4s var(--md-ease-spring-snappy), color .3s var(--md-ease-effects); }
 .stat-value.md-pop{ transform: scale(1.14); }
 
+/* --- "Volle Lautstärke freischalten" — a deliberately dangerous-looking
+       unlock with a dramatic activation animation (shake + red sweep + badge). --- */
+.loud-unlock{
+  display:flex; align-items:center; gap:.65rem;
+  margin-top:var(--spacing-3); padding:.65rem .85rem;
+  border-radius:var(--radius); border:1px solid var(--outline);
+  background:var(--background-darker); position:relative; overflow:hidden;
+  transition:border-color .3s var(--md-ease-effects), background .3s var(--md-ease-effects), box-shadow .3s var(--md-ease-effects);
+}
+.loud-unlock.armed{
+  border-color:var(--accent-red);
+  background:color-mix(in srgb, var(--accent-red) 13%, var(--background-darker));
+  animation:loud-throb 1.6s ease-in-out infinite;
+}
+@keyframes loud-throb{
+  0%,100%{ box-shadow:0 0 0 1px color-mix(in srgb,var(--accent-red) 55%,transparent), 0 0 12px color-mix(in srgb,var(--accent-red) 22%,transparent); }
+  50%   { box-shadow:0 0 0 1px var(--accent-red), 0 0 30px color-mix(in srgb,var(--accent-red) 65%,transparent); }
+}
+/* one-shot impact: hard shake (overrides throb for its 0.6s, then throb resumes) */
+.loud-unlock.fire{ animation:loud-fire .6s var(--md-ease-effects); }
+@keyframes loud-fire{
+  0%{transform:translateX(0)} 10%{transform:translateX(-8px)} 22%{transform:translateX(8px)}
+  34%{transform:translateX(-5px)} 46%{transform:translateX(5px)}
+  58%{transform:translateX(-3px)} 70%{transform:translateX(3px)} 100%{transform:translateX(0)}
+}
+/* red light bar sweeping across on activation */
+.loud-sweep{ position:absolute; inset:0; pointer-events:none; opacity:0;
+  background:linear-gradient(100deg, transparent 0%, color-mix(in srgb,var(--accent-red) 60%,transparent) 50%, transparent 100%); }
+.loud-unlock.fire .loud-sweep{ animation:loud-sweep .6s var(--md-ease-effects); }
+@keyframes loud-sweep{ 0%{opacity:.95; transform:translateX(-100%)} 100%{opacity:0; transform:translateX(100%)} }
+
+/* danger-themed MD3 switch */
+.loud-switch{ position:relative; display:inline-flex; flex:none; cursor:pointer; z-index:1; }
+.loud-switch input{ position:absolute; opacity:0; width:0; height:0; }
+.loud-track{
+  width:46px; height:26px; border-radius:999px; padding:2px;
+  background:var(--surface-high); border:2px solid var(--outline);
+  display:inline-flex; align-items:center;
+  transition:background .3s var(--md-ease-effects), border-color .3s var(--md-ease-effects);
+}
+.loud-thumb{
+  width:16px; height:16px; border-radius:50%; background:var(--text-secondary);
+  transition:transform .5s var(--md-ease-spring-snappy), width .2s var(--md-ease-effects), height .2s var(--md-ease-effects), background .3s;
+}
+.loud-switch input:checked + .loud-track{ background:var(--accent-red); border-color:var(--accent-red); }
+.loud-switch input:checked + .loud-track .loud-thumb{ transform:translateX(20px); width:20px; height:20px; background:var(--on-danger); }
+.loud-switch input:focus-visible + .loud-track{ outline:2px solid var(--accent-red); outline-offset:3px; }
+
+/* label */
+.loud-label{ display:flex; align-items:center; gap:.5rem; font-size:.9rem; line-height:1.3;
+  color:var(--text-secondary); cursor:pointer; transition:color .3s var(--md-ease-effects); z-index:1; }
+.loud-unlock.armed .loud-label{ color:var(--accent-red); font-weight:600; }
+.loud-icon{ font-size:1.15rem; display:inline-block; }
+.loud-unlock.armed .loud-icon{ animation:loud-buzz 1.6s ease-in-out infinite; }
+@keyframes loud-buzz{ 0%,100%{transform:scale(1) rotate(0)} 50%{transform:scale(1.28) rotate(-6deg)} }
+.loud-range{ opacity:.78; }
+
+/* MAX warning badge — pops in and flashes when armed */
+.loud-badge{ margin-left:auto; flex:none; z-index:1;
+  font-size:.72rem; font-weight:800; letter-spacing:.07em; white-space:nowrap;
+  padding:.25rem .55rem; border-radius:999px;
+  background:var(--accent-red); color:var(--on-danger);
+  transform:scale(0); opacity:0;
+  transition:transform .5s var(--md-ease-spring-snappy), opacity .3s var(--md-ease-effects); }
+.loud-unlock.armed .loud-badge{ transform:scale(1); opacity:1; animation:loud-badge-flash 1.1s ease-in-out infinite .55s; }
+@keyframes loud-badge-flash{ 0%,100%{box-shadow:0 0 0 0 transparent} 50%{box-shadow:0 0 16px 2px color-mix(in srgb,var(--accent-red) 85%,transparent)} }
+
+@media (prefers-reduced-motion: reduce){
+  .loud-unlock.armed, .loud-unlock.fire, .loud-unlock.fire .loud-sweep,
+  .loud-unlock.armed .loud-icon, .loud-unlock.armed .loud-badge{ animation:none!important; }
+}
+
 /* --- Theme switch: MD3 Expressive circular reveal (View Transitions API).
        The incoming theme is clipped to a circle that blooms out from the
        toggle button and grows to cover the viewport. --- */
@@ -1023,11 +1095,17 @@ html.theme-anim::view-transition-new(root){
                               <div class="toggle-switch" id="mute-toggle"></div>
                               <label class="toggle-label" for="mute-toggle">Stummschaltung</label>
                           </div>
-                          <div style="display: flex; align-items: center; gap: var(--spacing-2); margin-top: var(--spacing-3);">
-                              <input type="checkbox" id="volume-extended" style="width: 18px; height: 18px;">
-                              <label for="volume-extended" style="color: var(--text-light); font-size: 0.9rem; cursor: pointer;">
-                                  Volle Lautstärke freischalten (-20 dB bis +16 dB)
+                          <div class="loud-unlock" id="loud-unlock">
+                              <span class="loud-sweep" aria-hidden="true"></span>
+                              <label class="loud-switch" title="Lauten Modus freischalten">
+                                  <input type="checkbox" id="volume-extended">
+                                  <span class="loud-track"><span class="loud-thumb"></span></span>
                               </label>
+                              <label for="volume-extended" class="loud-label">
+                                  <span class="loud-icon" aria-hidden="true">🔊</span>
+                                  <span class="loud-text">Volle Lautstärke freischalten<span class="loud-range"> (-20 dB bis +16 dB)</span></span>
+                              </label>
+                              <span class="loud-badge" aria-hidden="true">⚠ MAX</span>
                           </div>
                       </div>
 
@@ -1503,6 +1581,20 @@ html.theme-anim::view-transition-new(root){
                           if (currentValue > -20) {
                               this.elements.volumeSlider.value = '-20';
                               this.setVolume(-20);
+                          }
+                      }
+
+                      // Dramatize the loud-mode unlock.
+                      const unlock = document.getElementById('loud-unlock');
+                      if (unlock) {
+                          unlock.classList.toggle('armed', isExtended);
+                          if (isExtended) {
+                              unlock.classList.remove('fire');
+                              void unlock.offsetWidth; // restart the one-shot impact animation
+                              unlock.classList.add('fire');
+                              setTimeout(() => unlock.classList.remove('fire'), 650);
+                              if (navigator.vibrate) navigator.vibrate([35, 45, 35]);
+                              this.showMessage('⚠️ Lauter Modus aktiv — bis +16 dB!', 'error');
                           }
                       }
                   });
