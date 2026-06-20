@@ -883,11 +883,10 @@ h1,h2,h3{ text-wrap:balance; }
 .main-tabs, .tabs{ position: relative; }
 .main-tab.active, .tab.active{ border-bottom-color: transparent; } /* the bar replaces the static underline */
 .tab-ind{
-  position:absolute; bottom:0; left:0; height:3px; width:0; opacity:0;
-  border-radius:3px 3px 0 0; background: var(--accent-blue); pointer-events:none;
-  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-blue) 55%, transparent);
+  position:absolute; bottom:0; left:0; height:3px; width:1px; opacity:0;
+  transform-origin:left center; will-change:transform;
+  border-radius:2px 2px 0 0; background: var(--accent-blue); pointer-events:none;
   transition: transform .46s var(--md-ease-spring-snappy),
-              width .46s var(--md-ease-spring-snappy),
               opacity .2s var(--md-ease-effects);
 }
 
@@ -2459,8 +2458,7 @@ html.theme-anim::view-transition-new(root){
       var a = container.querySelector(sel + '.active');
       if(!a || !a.offsetWidth){ ind.style.opacity = 0; return; }
       ind.style.opacity = 1;
-      ind.style.width = a.offsetWidth + 'px';
-      ind.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+      ind.style.transform = 'translateX(' + a.offsetLeft + 'px) scaleX(' + a.offsetWidth + ')';
     }
     container.addEventListener('click', function(){ requestAnimationFrame(move); });
     if('ResizeObserver' in window){ new ResizeObserver(move).observe(container); } // fires when strip becomes visible
