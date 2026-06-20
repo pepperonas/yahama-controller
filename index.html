@@ -799,6 +799,14 @@
 .stat-card:nth-child(2){animation-delay:.06s} .stat-card:nth-child(3){animation-delay:.12s}
 .stat-card:nth-child(4){animation-delay:.18s}
 
+/* Tab switch: EINE composited Container-Einblendung statt 10 gestaffelter
+   md-enter-Entrances je Karte. Letztere ruckelten, weil beim System-Info-Tab
+   loadSystemInfo() den DOM mitten in der ~1s-Stagger-Animation umbaute (Reflow).
+   Jetzt animiert nur der Container (1 Layer, transform/opacity) -> ruckelfrei. */
+.tab-content.active { animation: md-tab-in .34s var(--md-ease-spatial); }
+@keyframes md-tab-in { from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:none} }
+.tab-content .card, .tab-content .stat-card { animation: none !important; }
+
 /* Buttons: springy press / hover lift */
 .btn, .power-button {
     transition: transform .4s var(--md-ease-spatial), box-shadow .2s var(--md-ease-effects), filter .2s var(--md-ease-effects), background-color .3s ease, border-color .3s ease, color .3s ease;
@@ -2182,9 +2190,10 @@ html.theme-anim::view-transition-new(root){
                       content.classList.toggle('active', content.id === `${tabName}-tab`);
                   });
 
-                  // Load system info when switching to system tab
+                  // Load system info when switching to system tab — deferred a frame so
+                  // the tab entrance commits before the fetch + DOM rebuild (no jank).
                   if (tabName === 'system') {
-                      this.loadSystemInfo();
+                      requestAnimationFrame(() => this.loadSystemInfo());
                   }
                   
                   // Load bass/treble values when switching to extended tab
