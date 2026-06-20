@@ -421,7 +421,8 @@
               display: flex;
               border-bottom: 2px solid rgba(255, 255, 255, 0.1);
               margin-bottom: var(--spacing-6);
-              overflow-x: auto;
+              overflow-x: clip; /* clip statt auto: der scaleX-Tab-Indicator ragt sonst ~1px
+                                   über die Kante -> echte H-Scrollbar -> ResizeObserver-Flicker */
           }
 
           .tab {
@@ -735,7 +736,7 @@
               display: flex;
               border-bottom: 2px solid rgba(255, 255, 255, 0.1);
               margin-bottom: var(--spacing-4);
-              overflow-x: auto;
+              overflow-x: clip; /* clip statt auto: s. .tabs — verhindert die 1px-H-Scrollbar */
               background: var(--card-background);
               border-radius: var(--radius) var(--radius) 0 0;
           }
