@@ -1,10 +1,8 @@
 # 🎛️ Yamaha RX-V577 Controller
 
-> **⚡ Update 2026-06 — Stack & UI**
->
-> - **Backend:** schlankes **Go-Binary** (~7 MB, migriert von Node/Express). Serviert die PWA, `/api/health`, `/api/set-receiver-ip` und reverse-proxyt `/api/receiver/*` an den RX-V577. **systemd** `yamaha-controller`. Source: `main.go` (+ `/Users/martin/claude/yamaha-controller-go/`, Cross-Build `GOOS=linux GOARCH=arm64`).
-> - **UI:** **Material Design 3 Expressive** + Spring-Animationen.
-> - **Deploy:** Binary bauen → `scp` → `sudo systemctl restart yamaha-controller`
+> **Stack note (2026-06):** This app was migrated from **Node.js/Express + PM2** to a single
+> **Go binary running under systemd**. There is **no** `package.json`, `server.js`,
+> `ecosystem.config.js`, `npm`, or PM2 anymore — see [Technical Details](#-technical-details).
 
 <div align="center">
 
@@ -14,24 +12,21 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub code size](https://img.shields.io/github/languages/code-size/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub issues](https://img.shields.io/github/issues/pepperonas/yahama-controller?style=for-the-badge)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/pepperonas/yahama-controller?style=for-the-badge)
-![GitHub forks](https://img.shields.io/github/forks/pepperonas/yahama-controller?style=for-the-badge)
-![GitHub watchers](https://img.shields.io/github/watchers/pepperonas/yahama-controller?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
-![Node.js](https://img.shields.io/badge/Node.js-18.x-green?style=for-the-badge&logo=node.js)
-![Express.js](https://img.shields.io/badge/Express.js-4.x-000000?style=for-the-badge&logo=express)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![systemd](https://img.shields.io/badge/systemd-service-30D475?style=for-the-badge&logo=systemd&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![Status](https://img.shields.io/badge/status-active-success.svg?style=for-the-badge)
 ![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi-C51A4A?style=for-the-badge&logo=raspberry-pi)
 
-<h3>Professional Web Application for Complete Control of Yamaha RX-V577 AV Receivers</h3>
+<h3>Web Application for Complete Control of Yamaha RX-V577 AV Receivers</h3>
 
 <p>
-  <strong>A modern, feature-rich web interface with advanced controls and dark theme support</strong>
+  <strong>A modern, feature-rich PWA — Material Design 3 Expressive UI with dark/light theme</strong>
 </p>
 
 ![Yamaha Control Interface](public/assets/yahama-mockup-1.png)
@@ -58,9 +53,10 @@ If you find this project useful, consider supporting its development:
 
 ## 📋 Table of Contents
 
+- [How It Works](#-how-it-works)
 - [Features](#-features)
 - [Quick Start](#-quick-start)
-- [Installation](#-installation)
+- [Build & Deploy](#-build--deploy)
 - [Usage](#-usage)
 - [Technical Details](#-technical-details)
 - [API Documentation](#-api-documentation)
@@ -68,13 +64,26 @@ If you find this project useful, consider supporting its development:
 - [Contributing](#-contributing)
 - [License](#-license)
 
+## 🧭 How It Works
+
+The backend is a tiny, self-contained **Go binary** (`yamaha-controller`, ARM64, ~6.3 MB). It does three things:
+
+1. **Serves the PWA** — `index.html` plus the static assets in `public/` (icons, manifest, service worker).
+2. **Exposes two small control endpoints** — `GET /api/health` and `POST /api/set-receiver-ip`.
+3. **Reverse-proxies `/api/receiver/*`** to the configured Yamaha receiver's HTTP API, so the
+   browser talks to the receiver through the app (no CORS issues, runtime-configurable target IP).
+
+The receiver IP is stored in `receiver-config.json` and is settable at runtime via the UI / the
+`/api/set-receiver-ip` endpoint — no rebuild or restart required.
+
 ## ✨ Features
 
 ### 📱 Navigation & Interface
+- **Material Design 3 Expressive UI** with spring animations + circular theme-reveal (View Transitions API)
 - **Multi-Tab Interface**: Basic controls, extended features, and system information
 - **Multi-Zone Control**: Independent control for Main Zone and Zone 2
 - **Dual Theme Support**: Dark theme (default) and light theme with one-click toggle
-- **Progressive Web App**: Installable on mobile devices with offline functionality
+- **Progressive Web App**: Installable on mobile devices with offline functionality (service worker)
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 - **Real-time Updates**: Status polling every 5 seconds for live updates
 
@@ -125,63 +134,85 @@ If you find this project useful, consider supporting its development:
 
 ## 🚀 Quick Start
 
+Run the Go binary directly (anywhere on the same network as the receiver):
+
 ```bash
 # Clone the repository
 git clone https://github.com/pepperonas/yahama-controller.git
 cd yahama-controller
 
-# Install dependencies
-npm install
+# Build the binary (Go 1.26+)
+go build -o yamaha-controller .
 
-# Start the server
-npm start
+# Run it (serves on port 5001; set PORT to override)
+./yamaha-controller
 
 # Access the application
 # Browser: http://localhost:5001
 # Network: http://[YOUR-IP]:5001
 ```
 
-## 📦 Installation
+The server reads/writes `receiver-config.json` in its working directory; set the receiver IP from
+the UI's connection panel on first launch.
+
+**Environment variables**
+
+| Variable      | Default            | Purpose                                          |
+|---------------|--------------------|--------------------------------------------------|
+| `PORT`        | `5001`             | HTTP listen port                                 |
+| `YAMAHA_DIR`  | current dir        | Base dir for `index.html`, `public/`, config     |
+
+## 📦 Build & Deploy
 
 ### Prerequisites
-- Node.js 18.x or higher
-- npm or yarn package manager
+- **Go 1.26+** (to build) — no Node.js, no npm
 - Network access to your Yamaha receiver
 
-### Production Deployment with PM2
+### Production deployment (Raspberry Pi, systemd)
+
+The reference deployment is a cross-compiled ARM64 binary running as a **systemd** service on a
+Raspberry Pi.
 
 ```bash
-# Install PM2 globally
-npm install pm2 -g
+# 1. Cross-build for ARM64 (e.g. from a dev machine)
+GOOS=linux GOARCH=arm64 go build -ldflags "-s -w" -o bin/yamaha-controller-arm64 .
 
-# Start the application
-pm2 start server.js --name yamaha-controller
+# 2. Copy the binary to the Pi
+scp bin/yamaha-controller-arm64 pi@<pi-host>:/home/pi/apps/yahama-controller/yamaha-controller
 
-# Enable auto-start on system boot
-pm2 startup
-pm2 save
-
-# View logs
-pm2 logs yamaha-controller
+# 3. Restart the service
+ssh pi@<pi-host> 'sudo systemctl restart yamaha-controller'
 ```
 
-### Docker Deployment
+The systemd unit (`yamaha-controller.service`):
 
-```dockerfile
-# Dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-EXPOSE 5001
-CMD ["node", "server.js"]
+```ini
+[Unit]
+Description=Yamaha Receiver Control (Go) — RX-V577 proxy + PWA
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/apps/yahama-controller
+ExecStart=/home/pi/apps/yahama-controller/yamaha-controller
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
 ```
+
+Install / enable it once:
 
 ```bash
-# Build and run
-docker build -t yamaha-controller .
-docker run -d -p 5001:5001 --name yamaha-ctrl yamaha-controller
+sudo cp yamaha-controller.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now yamaha-controller
+
+# Logs
+sudo journalctl -u yamaha-controller -f
 ```
 
 ## 🎮 Usage
@@ -196,7 +227,7 @@ docker run -d -p 5001:5001 --name yamaha-ctrl yamaha-controller
 2. **Connect to Receiver**:
    - Enter the receiver's IP address in the connection panel
    - Click "Connect" to establish connection
-   - IP address is saved for future sessions
+   - The IP is persisted in `receiver-config.json` for future sessions
 
 ### Basic Operations
 
@@ -227,38 +258,52 @@ docker run -d -p 5001:5001 --name yamaha-ctrl yamaha-controller
 ### Architecture
 
 ```
-yamaha-controller/
+yahama-controller/
+├── main.go                 # Go server: PWA static serving + /api/* + receiver reverse-proxy
+├── go.mod                  # Go module (no external deps — stdlib only)
+├── yamaha-controller       # Compiled ARM64 binary (deployed artifact)
+├── yamaha-controller.service  # systemd unit
+├── index.html              # Main interface (PWA shell)
 ├── public/                 # Static assets
-│   ├── assets/            # Images and mockups
-│   ├── icons/             # App icons and favicons
-│   ├── manifest.json      # PWA manifest
-│   └── service-worker.js  # Offline functionality
-├── src/                   # Source code (if restructured)
-├── index.html             # Main interface
-├── server.js              # Express.js server
-├── package.json           # Dependencies
-├── receiver-config.json   # Saved configuration
-└── README.md             # Documentation
+│   ├── assets/             # Images and mockups
+│   ├── icon-*.png / favicon* / apple-touch-icon.png  # App icons
+│   ├── manifest.json       # PWA manifest
+│   └── service-worker.js   # Offline functionality
+└── receiver-config.json    # Saved receiver IP (written at runtime)
 ```
 
 ### Technology Stack
 
-- **Backend**: Node.js with Express.js
-- **Frontend**: Vanilla JavaScript with modern ES6+
-- **Communication**: XML-based Yamaha protocol over HTTP
-- **Process Manager**: PM2 for production
-- **Styling**: CSS3 with CSS Variables for theming
+- **Backend**: **Go** (standard library only — `net/http` + `net/http/httputil` reverse proxy)
+- **Runtime**: single static binary, **no dependencies**, run under **systemd**
+- **Frontend**: Vanilla JavaScript / HTML5 / CSS3, Material Design 3 Expressive theming
+- **Communication**: XML-based Yamaha protocol over HTTP, reverse-proxied by the Go backend
+- **Distribution**: cross-compiled ARM64 binary for Raspberry Pi
 
 ### Network Requirements
 
 - Receiver and controller must be on the same network
-- HTTP requests to receiver IP on port 80
+- The backend makes HTTP requests to the receiver IP on port 80
 - No authentication required for local network access
-- CORS handled by Express proxy server
+- CORS is handled by the Go server (permissive `Access-Control-Allow-*` headers + the
+  `/api/receiver/*` reverse proxy)
 
 ## 📚 API Documentation
 
-### XML Command Structure
+### Server Endpoints (Go backend)
+
+| Method | Path                     | Purpose                                                        |
+|--------|--------------------------|----------------------------------------------------------------|
+| `GET`  | `/`                      | Serve the PWA (`index.html` + `public/` assets)                |
+| `GET`  | `/api/health`            | Health check — returns `{status, receiverIP, timestamp}`       |
+| `POST` | `/api/set-receiver-ip`   | Set + persist the receiver IP (`{"ip":"192.168.x.y"}`)         |
+| `*`    | `/api/receiver/*`        | Reverse-proxy to `http://<receiverIP>/*` (prefix stripped)     |
+
+All endpoints respond to `OPTIONS` for CORS preflight.
+
+### XML Command Structure (Yamaha protocol)
+
+Commands are sent to the receiver through the `/api/receiver/*` proxy. Examples:
 
 ```xml
 <!-- Power Control -->
@@ -300,21 +345,13 @@ yamaha-controller/
 </YAMAHA_AV>
 ```
 
-### Server Endpoints
-
-- `GET /` - Serve main application
-- `GET /api/health` - Health check endpoint
-- `POST /api/receiver/*` - Proxy to receiver
-- `GET /api/receiver-ip` - Get saved IP
-- `POST /api/receiver-ip` - Save receiver IP
-
 ## 🐛 Troubleshooting
 
 ### Connection Issues
 
 **Problem**: "Connection failed" error
-- Verify receiver IP address is correct
-- Ensure receiver is powered on and network-connected
+- Verify the receiver IP address is correct (check `/api/health` → `receiverIP`)
+- Ensure the receiver is powered on and network-connected
 - Check firewall settings aren't blocking connections
 
 **Problem**: Cannot power on via network
@@ -322,27 +359,21 @@ yamaha-controller/
 - Use Ethernet connection for reliable network wake
 - Physical power button or IR remote may be needed for initial power-on
 
-### Status Not Updating
-
-- Check network connectivity
-- Verify receiver is powered on
-- Status polling occurs every 5 seconds automatically
-- Check browser console for error messages
-
-### CORS Errors
-
-If accessing directly via file:// protocol:
+### Service / Status Issues
 
 ```bash
-# Option 1: Use the Node.js server (recommended)
-npm start
+# Is the service running?
+systemctl status yamaha-controller
 
-# Option 2: Python HTTP server
-python -m http.server 8000
+# Follow logs
+sudo journalctl -u yamaha-controller -f
 
-# Option 3: Browser with disabled security (testing only)
-chrome --disable-web-security --user-data-dir=/tmp/chrome_dev
+# Restart after deploying a new binary
+sudo systemctl restart yamaha-controller
 ```
+
+- Status polling occurs every 5 seconds automatically
+- Check the browser console for client-side error messages
 
 ## 🤝 Contributing
 
@@ -357,17 +388,14 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ### Development Setup
 
 ```bash
-# Install development dependencies
-npm install --save-dev
+# Build
+go build -o yamaha-controller .
 
-# Run with auto-reload
-npm run dev
+# Run locally (auto-creates / reads receiver-config.json in the working dir)
+./yamaha-controller
 
-# Run tests (if available)
-npm test
-
-# Lint code
-npm run lint
+# Vet
+go vet ./...
 ```
 
 ## 📄 License
