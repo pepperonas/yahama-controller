@@ -8,20 +8,36 @@
 
 ![Yamaha Controller](public/assets/social-preview.png)
 
+<!-- GitHub meta -->
 ![GitHub last commit](https://img.shields.io/github/last-commit/pepperonas/yahama-controller?style=for-the-badge&color=green)
 ![GitHub repo size](https://img.shields.io/github/repo-size/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub code size](https://img.shields.io/github/languages/code-size/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub issues](https://img.shields.io/github/issues/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/pepperonas/yahama-controller?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)
+
+<!-- Stack -->
 ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?style=for-the-badge&logo=go&logoColor=white)
-![systemd](https://img.shields.io/badge/systemd-service-30D475?style=for-the-badge&logo=systemd&logoColor=white)
-![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Vanilla JS](https://img.shields.io/badge/JavaScript-ES2022-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)
+![YNCA%2FXML](https://img.shields.io/badge/protocol-YNCA%2FXML-FF6600?style=for-the-badge&logo=yamaha&logoColor=white)
+
+<!-- Platform & deployment -->
+![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi-C51A4A?style=for-the-badge&logo=raspberry-pi&logoColor=white)
+![systemd](https://img.shields.io/badge/systemd-service-30D475?style=for-the-badge&logo=linux&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![ARM64](https://img.shields.io/badge/arch-ARM64-0091BD?style=for-the-badge&logo=arm&logoColor=white)
+
+<!-- Quality -->
+![Tests](https://img.shields.io/badge/tests-18%20passing-success?style=for-the-badge&logo=go&logoColor=white)
+![No deps](https://img.shields.io/badge/dependencies-stdlib%20only-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 ![Status](https://img.shields.io/badge/status-active-success.svg?style=for-the-badge)
 ![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)
-![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi-C51A4A?style=for-the-badge&logo=raspberry-pi)
+![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
+![Made with love](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F%20in%20Berlin-red?style=for-the-badge)
+![Yamaha RX-V577](https://img.shields.io/badge/Yamaha-RX--V577-003087?style=for-the-badge&logo=yamaha&logoColor=white)
 
 <h3>Web Application for Complete Control of Yamaha RX-V577 AV Receivers</h3>
 
@@ -61,6 +77,7 @@ If you find this project useful, consider supporting its development:
 - [Technical Details](#-technical-details)
 - [API Documentation](#-api-documentation)
 - [Troubleshooting](#-troubleshooting)
+- [Tests](#-tests)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -374,6 +391,36 @@ sudo systemctl restart yamaha-controller
 
 - Status polling occurs every 5 seconds automatically
 - Check the browser console for client-side error messages
+
+## 🧪 Tests
+
+The project ships a `main_test.go` covering the core Go server logic with 18 assertions.
+
+```bash
+go test ./...
+```
+
+```
+ok  yamaha-controller  (18 tests)
+```
+
+**What's tested:**
+
+| Area | Tests |
+|---|---|
+| **IP regex validation** | 7 valid IPv4 addresses pass · 10 malformed/out-of-range/non-IP strings rejected |
+| **Config persistence** | Round-trip `saveConfig` → `loadConfig` · missing file leaves state unchanged · corrupt JSON leaves state unchanged · written file is valid JSON |
+| **`GET /api/health`** | Returns 200 + `application/json` · body contains `status:"OK"`, `receiverIP`, and `timestamp` |
+| **`POST /api/set-receiver-ip`** | Valid IP → 200 + `{success:true}` + in-memory state updated · bad format / empty / hostname → 400 · malformed JSON → 400 |
+| **CORS middleware** | `Access-Control-Allow-Origin: *` present · `OPTIONS` preflight returns 204 |
+| **Static file serving** | Path-traversal (`/../etc/passwd`) blocked · `/` returns `index.html` · missing path returns 404 |
+| **Receiver proxy** | No IP configured → 500 with `error` field |
+
+Run with verbose output:
+
+```bash
+go test ./... -v
+```
 
 ## 🤝 Contributing
 
