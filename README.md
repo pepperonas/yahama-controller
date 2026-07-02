@@ -13,7 +13,10 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub code size](https://img.shields.io/github/languages/code-size/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub issues](https://img.shields.io/github/issues/pepperonas/yahama-controller?style=for-the-badge)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/pepperonas/yahama-controller?style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/pepperonas/yahama-controller?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/pepperonas/yahama-controller?style=for-the-badge)
+![GitHub watchers](https://img.shields.io/github/watchers/pepperonas/yahama-controller?style=for-the-badge)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)
 
 <!-- Stack -->
@@ -22,22 +25,38 @@
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![Vanilla JS](https://img.shields.io/badge/JavaScript-ES2022-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)
+![Service Worker](https://img.shields.io/badge/Service%20Worker-offline%20ready-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
+![Material Design 3](https://img.shields.io/badge/Material%20Design-3%20Expressive-757575?style=for-the-badge&logo=materialdesign&logoColor=white)
 ![YNCA%2FXML](https://img.shields.io/badge/protocol-YNCA%2FXML-FF6600?style=for-the-badge&logo=yamaha&logoColor=white)
+
+<!-- Device & protocol -->
+![Yamaha RX-V577](https://img.shields.io/badge/Yamaha-RX--V577-003087?style=for-the-badge&logo=yamaha&logoColor=white)
+![Receiver Protocol](https://img.shields.io/badge/receiver-HTTP%20XML%20API-FF6600?style=for-the-badge)
+![Volume Range](https://img.shields.io/badge/volume-−80%20…%20%2B16.5%20dB-1DB954?style=for-the-badge)
+![Inputs](https://img.shields.io/badge/inputs-HDMI%20%7C%20AV%20%7C%20AirPlay%20%7C%20BT%20%7C%20USB-0066CC?style=for-the-badge)
+![DSP](https://img.shields.io/badge/DSP-15%20surround%20modes-8B5CF6?style=for-the-badge)
+![Zones](https://img.shields.io/badge/zones-Main%20%2B%20Zone%202-F59E0B?style=for-the-badge)
+![EQ](https://img.shields.io/badge/EQ-7%20band-10B981?style=for-the-badge)
 
 <!-- Platform & deployment -->
 ![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi-C51A4A?style=for-the-badge&logo=raspberry-pi&logoColor=white)
 ![systemd](https://img.shields.io/badge/systemd-service-30D475?style=for-the-badge&logo=linux&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-compatible-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![ARM64](https://img.shields.io/badge/arch-ARM64-0091BD?style=for-the-badge&logo=arm&logoColor=white)
+![Binary size](https://img.shields.io/badge/binary-~6.3%20MB-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![Port](https://img.shields.io/badge/port-5001-6366F1?style=for-the-badge)
 
-<!-- Quality -->
-![Tests](https://img.shields.io/badge/tests-18%20passing-success?style=for-the-badge&logo=go&logoColor=white)
+<!-- Quality & project health -->
+![Tests](https://img.shields.io/badge/tests-49%20passing-success?style=for-the-badge&logo=go&logoColor=white)
 ![No deps](https://img.shields.io/badge/dependencies-stdlib%20only-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![Zero runtime deps](https://img.shields.io/badge/runtime%20deps-zero-brightgreen?style=for-the-badge)
+![Go vet](https://img.shields.io/badge/go%20vet-clean-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 ![Status](https://img.shields.io/badge/status-active-success.svg?style=for-the-badge)
 ![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)
+![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4%EF%B8%8F-blue?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
 ![Made with love](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F%20in%20Berlin-red?style=for-the-badge)
-![Yamaha RX-V577](https://img.shields.io/badge/Yamaha-RX--V577-003087?style=for-the-badge&logo=yamaha&logoColor=white)
 
 <h3>Web Application for Complete Control of Yamaha RX-V577 AV Receivers</h3>
 
@@ -394,33 +413,42 @@ sudo systemctl restart yamaha-controller
 
 ## 🧪 Tests
 
-The project ships a `main_test.go` covering the core Go server logic with 18 assertions.
+The project ships comprehensive Go unit tests across two files — `main_test.go` (HTTP server logic)
+and `yamaha_test.go` (pure Yamaha-protocol helpers) — totalling **49 test functions**.
 
 ```bash
 go test ./...
 ```
 
 ```
-ok  yamaha-controller  (18 tests)
+ok  yamaha-controller  0.36s
 ```
 
-**What's tested:**
-
-| Area | Tests |
-|---|---|
-| **IP regex validation** | 7 valid IPv4 addresses pass · 10 malformed/out-of-range/non-IP strings rejected |
-| **Config persistence** | Round-trip `saveConfig` → `loadConfig` · missing file leaves state unchanged · corrupt JSON leaves state unchanged · written file is valid JSON |
-| **`GET /api/health`** | Returns 200 + `application/json` · body contains `status:"OK"`, `receiverIP`, and `timestamp` |
-| **`POST /api/set-receiver-ip`** | Valid IP → 200 + `{success:true}` + in-memory state updated · bad format / empty / hostname → 400 · malformed JSON → 400 |
-| **CORS middleware** | `Access-Control-Allow-Origin: *` present · `OPTIONS` preflight returns 204 |
-| **Static file serving** | Path-traversal (`/../etc/passwd`) blocked · `/` returns `index.html` · missing path returns 404 |
-| **Receiver proxy** | No IP configured → 500 with `error` field |
-
-Run with verbose output:
+Run with verbose output to see all 49 test names:
 
 ```bash
 go test ./... -v
 ```
+
+**What's tested:**
+
+| Area | File | Tests |
+|---|---|---|
+| **IP regex validation** | `main_test.go` | 7 valid IPv4 addresses pass · 10 malformed/out-of-range/non-IP strings rejected |
+| **Config persistence** | `main_test.go` | Round-trip `saveConfig` → `loadConfig` · missing file leaves state unchanged · corrupt JSON leaves state unchanged · written file is valid JSON |
+| **`GET /api/health`** | `main_test.go` | Returns 200 + `application/json` · body contains `status:"OK"`, `receiverIP`, and `timestamp` |
+| **`POST /api/set-receiver-ip`** | `main_test.go` | Valid IP → 200 + `{success:true}` + in-memory state updated · bad format / empty / hostname → 400 · malformed JSON → 400 |
+| **CORS middleware** | `main_test.go` | `Access-Control-Allow-Origin: *` present · `OPTIONS` preflight returns 204 |
+| **Static file serving** | `main_test.go` | Path-traversal (`/../etc/passwd`) blocked · `/` returns `index.html` · missing path returns 404 |
+| **Receiver proxy** | `main_test.go` | No IP configured → 500 with `error` field |
+| **Volume conversion** | `yamaha_test.go` | `DBtoRaw` / `RawToDB` common values, rounding, clamping, and full round-trip at 7 dB points |
+| **Percentage ↔ dB** | `yamaha_test.go` | `DBtoPct` / `PctToDB` endpoints, midpoint, clamping, and round-trip at 5 percentage points |
+| **ClampDB** | `yamaha_test.go` | Clamps to −80.0 / +16.5 dB range at min, max, below, and above |
+| **Tone control** | `yamaha_test.go` | `ToneDBtoRaw` / `ToneRawtoDB` common values + clamping to ±6.0 dB |
+| **XML builders** | `yamaha_test.go` | `PutXML` / `GetXML` envelope structure · `PowerXML` On/Standby · `VolumeXML` Val/Exp/Unit · `MuteXML` On/Off · `InputXML` · `BassXML` · `TrebleXML` · `BasicStatusGetXML` · Zone 2 tag |
+| **Volume XML round-trip** | `yamaha_test.go` | dB → `DBtoRaw` → `VolumeXML` contains correct `<Val>` at 4 dB points |
+| **Input source mapping** | `yamaha_test.go` | All 16 known inputs recognised · case-insensitive matching · 8 invalid/unknown inputs rejected |
+| **Proxy path stripping** | `yamaha_test.go` | 5 path cases: bare prefix, trailing slash, deep path, unmatched prefix |
 
 ## 🤝 Contributing
 
