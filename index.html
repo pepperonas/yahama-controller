@@ -1028,9 +1028,9 @@ html.theme-anim::view-transition-new(root){
   <body>
       <header class="header">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-4);">
-              <h1 style="margin: 0;">🎛️  Yamaha RX-V577 Controller</h1>
+              <h1 style="margin: 0;"><span class="sh-icon" data-sh-icon="mixer" aria-hidden="true" style="vertical-align:-0.12em;margin-right:.4rem"></span> Yamaha RX-V577 Controller</h1>
               <button id="theme-toggle" class="btn btn-outline btn-sm" style="border: none; background: rgba(255,255,255,0.1); color: var(--text-primary);">
-                  🌙
+                  <span class="sh-icon" data-sh-icon="moon" aria-hidden="true"></span>
               </button>
           </div>
       </header>
@@ -1112,10 +1112,10 @@ html.theme-anim::view-transition-new(root){
                                   <span class="loud-track"><span class="loud-thumb"></span></span>
                               </label>
                               <label for="volume-extended" class="loud-label">
-                                  <span class="loud-icon" aria-hidden="true">🔊</span>
+                                  <span class="loud-icon sh-icon" data-sh-icon="speaker" aria-hidden="true"></span>
                                   <span class="loud-text">Volle Lautstärke freischalten<span class="loud-range"> (-20 dB bis +16 dB)</span></span>
                               </label>
-                              <span class="loud-badge" aria-hidden="true">⚠ MAX</span>
+                              <span class="loud-badge" aria-hidden="true"><span class="sh-icon" data-sh-icon="warning" aria-hidden="true" style="vertical-align:-0.1em;margin-right:.25rem"></span> MAX</span>
                           </div>
                       </div>
 
@@ -1604,7 +1604,7 @@ html.theme-anim::view-transition-new(root){
                               unlock.classList.add('fire');
                               setTimeout(() => unlock.classList.remove('fire'), 650);
                               if (navigator.vibrate) navigator.vibrate([35, 45, 35]);
-                              this.showMessage('⚠️ Lauter Modus aktiv — bis +16 dB!', 'error');
+                              this.showMessage('Lauter Modus aktiv — bis +16 dB!', 'error');
                           }
                       }
                   });
@@ -2408,7 +2408,9 @@ html.theme-anim::view-transition-new(root){
               applyTheme(theme) {
                   document.documentElement.setAttribute('data-theme', theme);
                   if (this.elements.themeToggle) {
-                      this.elements.themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+                      this.// Icon only: icons.js is already a hard dependency of the shared nav bar.
+        elements.themeToggle.innerHTML = window.SHIcons
+          ? SHIcons.html(theme === 'dark' ? 'sun' : 'moon') : '';
                   }
               }
               
@@ -2439,7 +2441,7 @@ html.theme-anim::view-transition-new(root){
     
     <!-- Footer -->
     <footer style="text-align: center; padding: 20px; margin-top: 40px; color: rgba(255, 255, 255, 0.6); font-size: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-        Made with ❤️ by Martin Pfeffer
+        Made with <span class="sh-icon" data-sh-icon="heart" aria-hidden="true" style="vertical-align:-0.12em"></span> by Martin Pfeffer
     </footer>
 <script>/* MD3 Expressive motion drivers (ripple · tab-indicator · slider fill · stat pop) — additiv */
 (function(){
