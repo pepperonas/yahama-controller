@@ -1022,7 +1022,8 @@ html.theme-anim::view-transition-new(root){
   .message, .toggle-switch::after, .power-button.on::after, .stat-value{ transition:none!important; animation:none!important; }
 }
 </style>
-      <script src="/shared/nav.js" defer></script>
+      <script src="/shared/icons.js?v=1" defer></script>
+    <script src="/shared/nav.js?v=7" defer></script>
 </head>
   <body>
       <header class="header">
@@ -2208,7 +2209,9 @@ html.theme-anim::view-transition-new(root){
               async toggleExtraBass() {
                   
                   const isActive = this.elements.extraBassToggle.classList.contains('active');
-                  const newState = isActive ? 'Off' : 'On';
+                  // RX-V577 accepts Auto/Off here; On is rejected with RC=3, so the toggle
+                  // flipped in the UI while the receiver never changed.
+                  const newState = isActive ? 'Off' : 'Auto';
                   const xml = `<YAMAHA_AV cmd="PUT"><${this.currentZone}><Sound_Video><Extra_Bass>${newState}</Extra_Bass></Sound_Video></${this.currentZone}></YAMAHA_AV>`;
 
                   try {

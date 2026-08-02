@@ -144,7 +144,7 @@ The receiver IP is stored in `receiver-config.json` and is settable at runtime v
 ### 🎛️ Advanced Audio Features
 - **7-Band Equalizer**: 63Hz, 160Hz, 400Hz, 1kHz, 2.5kHz, 6.3kHz, 16kHz
 - **Bass/Treble Control**: -6 to +6 dB adjustment
-- **Extra Bass**: Enhanced bass reproduction
+- **Extra Bass**: Enhanced bass reproduction. **Sends `Auto`, not `On`** — the RX-V577 rejects `On` with `RC=3`, and a rejected command still returns HTTP 200, so the toggle used to flip in the UI while the receiver never changed.
 - **Compressed Music Enhancer**: Improve compressed audio quality
 - **Pure Direct Mode**: Bypass tone circuits for purest sound
 - **Virtual Presence Speaker**: Virtual surround effect
