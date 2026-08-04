@@ -1004,6 +1004,166 @@ html.theme-anim::view-transition-new(root){
   .tab-ind{ transition: opacity .01ms!important; }
   .message, .toggle-switch::after, .power-button.on::after, .stat-value{ transition:none!important; animation:none!important; }
 }
+
+/* ==========================================================================
+   dB-Analyse-Formsprache (2026-08-04)
+   --------------------------------------------------------------------------
+   Die Farben waren schon deckungsgleich — beide Apps kamen aus demselben
+   MD3-Expressive-Sweep, Hintergrund/Surface/Primary/Text sind Zeichen für
+   Zeichen dieselben Hex-Werte. Was die dB-Analyse anders macht, ist die FORM:
+
+     · ein Radius (28px) statt einer vierstufigen Skala
+     · Höhe über Kontur + Flächenton, nicht über Schlagschatten
+     · flacher, dunkelster Seitenhintergrund statt einer helleren Fläche
+     · Kartentitel im Textton, klein und fest — nicht groß und akzentblau
+     · Kennzahlen groß und tabellarisch, Label klein und in Versalien
+     · Bedienelemente als Pillen (999px), nicht als Rechtecke
+     · schmalerer Satzspiegel (1200 statt 1400), damit Zeilen lesbar bleiben
+
+   Bewusst nur CSS: Markup und JS bleiben unangetastet, damit kein Handler und
+   keine ID bricht. Und alles über Yamahas EIGENE Tokens formuliert, nicht über
+   die Hex-Werte der dB-Analyse — sonst wäre das helle Theme dieser App tot.
+   ========================================================================== */
+
+:root{
+  --dbx-radius: 28px;          /* der eine Radius der dB-Analyse */
+  --dbx-radius-sm: 16px;       /* nur Eingabefelder, wie dort */
+}
+
+/* Seite: flacher, dunkelster Ton — die dB-Analyse hat ihren Radialverlauf aus
+   genau dem Grund aufgegeben, aus dem er hier auffällt: er las sich als zwei
+   verschiedene Hintergründe. */
+body{ background-color: var(--background-darker); }
+
+.container{ max-width: 1200px; }
+
+/* Kopf: kein abgesetzter Sticky-Balken, sondern Teil der Seite. Der Titel trägt
+   die Display-Größe der dB-Analyse (clamp + 800 + negatives Tracking). */
+header{
+  background-color: transparent;
+  box-shadow: none;
+  position: static;
+  padding: var(--spacing-6) var(--spacing-4) var(--spacing-2);
+}
+header h1{
+  font-size: clamp(1.85rem, 5vw, 2.55rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-align: left;
+}
+
+/* Karten: ein Radius, Kontur statt Schatten. */
+.card{
+  border-radius: var(--dbx-radius);
+  box-shadow: none;
+  border: 1px solid var(--outline);
+  padding: 1.15rem 1.2rem 1rem;
+}
+.card h2{
+  font-size: 1.05rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-4);
+}
+.card h3{ font-size: .95rem; font-weight: 700; color: var(--text-secondary); }
+
+/* Kennzahl-Kacheln: Flächenton wie die Karte, große tabellarische Zahl,
+   Label klein in Versalien. Linksbündig — zentrierte Zahlen tanzen, sobald
+   sich die Stellenzahl ändert. */
+.stat-card{
+  background: var(--card-background);
+  border: 1px solid var(--outline);
+  border-radius: var(--dbx-radius);
+  padding: 1.1rem 1.15rem;
+  text-align: left;
+  min-height: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.stat-value{
+  font-size: clamp(1.65rem, 4vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.stat-label{
+  font-size: .76rem;
+  font-weight: 650;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-top: .35rem;
+}
+
+/* Bedienelemente als Pillen. */
+.btn{
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: .82rem;
+  letter-spacing: .02em;
+  transition: all .22s var(--ease-emph);
+}
+.btn-outline{
+  border: 1px solid var(--outline);
+  background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+  color: var(--text-secondary);
+}
+.btn-outline:hover{
+  background: color-mix(in srgb, var(--accent-blue) 10%, transparent);
+  color: var(--text-primary);
+  border-color: var(--outline);
+}
+.btn-outline.active,
+.btn-outline[aria-pressed="true"]{
+  background: var(--accent-blue);
+  color: var(--on-primary);
+  border-color: transparent;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent-blue) 45%, transparent);
+}
+.btn-sm{ padding: .38rem .85rem; font-size: .78rem; }
+
+/* Reiter: Pillen statt Unterstrich, wie die Zeitraum-Chips drüben. */
+/* Auch der Flächenton der Reiter-Leiste geht: drüben trägt die Chip-Reihe
+   keinen eigenen Grund, sonst steht ein Streifen hinter den Pillen. */
+.tabs, .main-tabs{ border-bottom: 0; gap: .3rem; flex-wrap: wrap;
+  background: transparent; box-shadow: none; padding-left: 0; padding-right: 0; }
+/* Der gleitende 3px-Indikator war die Auszeichnung des aktiven Reiters, solange
+   Reiter Unterstriche hatten. Unter einer gefüllten Pille ist er ein zweiter,
+   widersprüchlicher Marker — er bleibt im DOM (das JS schreibt weiter darauf,
+   ohne es zu merken) und wird nur ausgeblendet. */
+.tab-ind{ display: none; }
+/* .main-tabs setzt flex:1 auf seine Kinder — als Unterstrich-Reiter sinnvoll,
+   als Pille wird daraus ein 569px breites Oval. */
+.main-tab{ flex: 0 0 auto; }
+.tab, .main-tab{
+  border-bottom: 0;
+  border: 1px solid var(--outline);
+  border-radius: 999px;
+  padding: .32rem .8rem;
+  font-size: .8rem;
+  font-weight: 650;
+  color: var(--text-primary);
+  background: transparent;
+}
+.tab.active, .main-tab.active{
+  background: var(--accent-blue);
+  color: var(--on-primary);
+  border-color: transparent;
+}
+
+/* Eingaben: der kleinere Radius, eine Kontur statt zwei, Flächenton hoch. */
+.form-select{
+  background-color: var(--surface-high);
+  border: 1px solid var(--outline);
+  border-radius: var(--dbx-radius-sm);
+  padding: .65rem .9rem;
+  font-size: .95rem;
+}
+
 </style>
       <script src="/shared/icons.js?v=1" defer></script>
     <script src="/shared/nav.js?v=7" defer></script>
