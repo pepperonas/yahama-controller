@@ -1005,6 +1005,17 @@ html.theme-anim::view-transition-new(root){
   .message, .toggle-switch::after, .power-button.on::after, .stat-value{ transition:none!important; animation:none!important; }
 }
 
+/* Roboto Flex — die Schrift der dB-Analyse, selbst gehostet unter /shared/.
+   Diese App lädt von dort ohnehin schon icons.js und nav.js, die Abhängigkeit
+   ist also nicht neu. Beim Direktaufruf auf Port 5001 (an nginx vorbei) fehlt
+   /shared/ — dann greift der System-Stack dahinter, wie bei der Nav-Leiste. */
+@font-face{
+  font-family:'Roboto Flex';
+  src:url('/shared/fonts/RobotoFlex.woff2') format('woff2-variations');
+  font-weight:100 1000; font-stretch:25% 151%; font-display:swap;
+}
+:root{ --font-family: "Roboto Flex", Roboto, system-ui, -apple-system, sans-serif; }
+
 /* ==========================================================================
    dB-Analyse-Formsprache (2026-08-04)
    --------------------------------------------------------------------------
@@ -1039,26 +1050,37 @@ body{ background-color: var(--background-darker); }
 
 /* Kopf: kein abgesetzter Sticky-Balken, sondern Teil der Seite. Der Titel trägt
    die Display-Größe der dB-Analyse (clamp + 800 + negatives Tracking). */
-header{
+/* Auf KLASSENEBENE, nicht auf Elementebene. `.header` (0-1-0) schlägt ein
+   blankes `header` (0-0-1), und `.header h1` schlägt `header h1` — die erste
+   Fassung dieser Regeln lief deshalb ins Leere: Schatten, Sticky und Polster
+   blieben stehen, nur max-width/margin kamen durch (die stehen in `.header`
+   nicht drin). Sichtbar war das als „Platte" unter dem Titel: der Schatten
+   `0 4px 6px -1px rgba(0,0,0,.3)` zeichnete eine Kante quer über die Seite. */
+header, .header{
   background-color: transparent;
   box-shadow: none;
   position: static;
-  /* Auf denselben Satzspiegel wie .container. Der header ist ein Geschwister
-     davon, kein Kind — voll ausgestellt stand der Titel bei 1906 px Breite
-     345 px links neben der Inhaltsspalte und der Theme-Schalter 346 px rechts
-     davon. In der dB-Analyse liegt der Kopf innerhalb von .wrap und fluchtet
-     deshalb von selbst; hier muss das Maß nachgereicht werden. */
+  /* Derselbe Satzspiegel wie .container: der Kopf ist dessen Geschwister, kein
+     Kind, und lief voll ausgestellt — bei 1906 px stand der Titel 345 px links
+     neben der Inhaltsspalte. In der dB-Analyse liegt der Kopf innerhalb von
+     .wrap und erbt das Maß umsonst. */
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-6) var(--spacing-6) var(--spacing-2);
 }
-header h1{
+header h1, .header h1{
   font-size: clamp(1.85rem, 5vw, 2.55rem);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.05;
   text-align: left;
+  margin-bottom: 0;
 }
+/* Unterzeile wie drüben: gedämpft, klein, dicht unter dem Titel. */
+.header .sub{ color: var(--text-secondary); font-size: .9rem; margin-top: .35rem; }
+/* Der Kopf richtet oben aus, sobald darunter eine zweite Zeile steht —
+   sonst zöge der Theme-Schalter auf die Mitte des zweizeiligen Blocks. */
+.header > div{ align-items: flex-start !important; }
 
 /* Karten: ein Radius, Kontur statt Schatten. */
 .card{
@@ -1180,7 +1202,7 @@ header h1{
   <body>
       <header class="header">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-4);">
-              <h1 style="margin: 0;"><span class="sh-icon" data-sh-icon="mixer" aria-hidden="true" style="vertical-align:-0.12em;margin-right:.4rem"></span> Yamaha RX-V577 Controller</h1>
+              <div><h1 style="margin: 0;"><span class="sh-icon" data-sh-icon="mixer" aria-hidden="true" style="vertical-align:-0.12em;margin-right:.4rem"></span> Yamaha RX-V577 Controller</h1><div class="sub">Professionelle AV-Receiver-Steuerung</div></div>
               <button id="theme-toggle" class="btn btn-outline btn-sm" style="border: none; background: rgba(255,255,255,0.1); color: var(--text-primary);">
                   <span class="sh-icon" data-sh-icon="moon" aria-hidden="true"></span>
               </button>
