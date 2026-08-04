@@ -149,7 +149,7 @@
               padding: var(--spacing-6);
               margin-bottom: var(--spacing-6);
               box-shadow: var(--shadow);
-              border: 1px solid rgba(255, 255, 255, 0.1);
+              border: 1px solid var(--sh-outline);
           }
 
           .card h2 {
@@ -274,7 +274,7 @@
               width: 100%;
               padding: var(--spacing-3);
               background-color: var(--background-darker);
-              border: 2px solid rgba(255, 255, 255, 0.1);
+              border: 2px solid var(--sh-outline);
               border-radius: var(--radius);
               color: var(--text-primary);
               font-size: 1rem;
@@ -291,7 +291,7 @@
               width: 100%;
               padding: var(--spacing-3);
               background-color: var(--background-darker);
-              border: 2px solid rgba(255, 255, 255, 0.1);
+              border: 2px solid var(--sh-outline);
               border-radius: var(--radius);
               color: var(--text-primary);
               font-size: 1rem;
@@ -390,7 +390,7 @@
           /* Tabs */
           .tabs {
               display: flex;
-              border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+              border-bottom: 2px solid var(--sh-outline);
               margin-bottom: var(--spacing-6);
               overflow-x: clip; /* clip statt auto: der scaleX-Tab-Indicator ragt sonst ~1px
                                    über die Kante -> echte H-Scrollbar -> ResizeObserver-Flicker */
@@ -618,7 +618,7 @@
               padding: var(--spacing-4);
               border-radius: var(--radius);
               text-align: center;
-              border: 1px solid rgba(255, 255, 255, 0.1);
+              border: 1px solid var(--sh-outline);
           }
 
           .stat-value {
@@ -705,7 +705,7 @@
           /* Main Tabs */
           .main-tabs {
               display: flex;
-              border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+              border-bottom: 2px solid var(--sh-outline);
               margin-bottom: var(--spacing-4);
               overflow-x: clip; /* clip statt auto: s. .tabs — verhindert die 1px-H-Scrollbar */
               background: var(--card-background);
@@ -2498,7 +2498,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
     </script>
     
     <!-- Footer -->
-    <footer style="text-align: center; padding: 20px; margin-top: 40px; color: rgba(255, 255, 255, 0.6); font-size: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; color: rgba(255, 255, 255, 0.6); font-size: 14px; border-top: 1px solid var(--sh-outline);">
         Made with <span class="sh-icon" data-sh-icon="heart" aria-hidden="true" style="vertical-align:-0.12em"></span> by Martin Pfeffer
     </footer>
 <script>/* MD3 Expressive motion drivers (ripple · tab-indicator · slider fill · stat pop) — additiv */
