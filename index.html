@@ -1,6 +1,7 @@
 <!DOCTYPE html>
   <html lang="de">
   <head>
+    <script>(function(){try{var t=localStorage.getItem('sh-theme')||localStorage.getItem('dash-theme')||localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
     <link rel="manifest" href="public/manifest.json">
     <meta name="theme-color" content="#2c2e3b">
 <meta charset="UTF-8">
@@ -1112,8 +1113,8 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                       color:var(--sh-text2); }
 .status-disconnected::before{ background:var(--sh-muted); box-shadow:none; }
 </style>
-      <script src="/shared/icons.js?v=1" defer></script>
-    <script src="/shared/nav.js?v=7" defer></script>
+      <script src="/shared/icons.js?v=4" defer></script>
+    <script src="/shared/nav.js?v=9" defer></script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
@@ -1121,12 +1122,6 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
       <header class="header">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-4);">
               <div><h1 style="margin: 0;"><span class="sh-icon" data-sh-icon="mixer" aria-hidden="true" style="vertical-align:-0.12em;margin-right:.4rem"></span> Yamaha RX-V577 Controller</h1><div class="sub">Professionelle AV-Receiver-Steuerung</div></div>
-              <!-- Kanonische Bauform aus shared/theme.css: derselbe Knopf wie in
-                 PowerHiFi und im Dashboard. Die Inline-Styles hier setzten
-                 Rahmen und Fläche eigenständig und liefen an jedem Token vorbei. -->
-            <button type="button" id="theme-toggle" class="sh-theme-btn" aria-label="Helles oder dunkles Design">
-                  <span class="sh-icon" data-sh-icon="moon" aria-hidden="true"></span>
-              </button>
           </div>
       </header>
 
@@ -1548,7 +1543,6 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                   this.connected = false;
                   this.statusInterval = null;
                   this.permanentErrorTimer = null;
-                  this.currentTheme = localStorage.getItem('theme') || 'dark';
                   this.initializeElements();
                   this.attachEventListeners();
                   this.loadSavedIP();
@@ -1636,10 +1630,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                       tabContents: document.querySelectorAll('.tab-content'),
                       tabs: document.querySelectorAll('.tab'),
                       inputBtns: document.querySelectorAll('[data-input]'),
-                      sceneBtns: document.querySelectorAll('[data-scene]'),
-                      
-                      // Theme toggle
-                      themeToggle: document.getElementById('theme-toggle')
+                      sceneBtns: document.querySelectorAll('[data-scene]')
                   };
               }
 
@@ -1780,9 +1771,6 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
 
                   
                   // Theme toggle
-                  if (this.elements.themeToggle) {
-                      this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
-                  }
               }
 
               async loadSavedIP() {
@@ -2472,41 +2460,16 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
               
               // Theme Management
               initializeTheme() {
-                  this.applyTheme(this.currentTheme);
-              }
-              
-              toggleTheme() {
-                  const next = this.currentTheme === 'dark' ? 'light' : 'dark';
-                  const apply = () => {
-                      this.currentTheme = next;
-                      this.applyTheme(next);
-                      localStorage.setItem('theme', next);
+                  // Umschalten, Speichern und der Kreis-Reveal liegen in
+                  // shared/nav.js — eine Implementierung fuer alle Apps statt
+                  // neun. Hier bleibt nur, was nur diese Seite weiss: die Farbe
+                  // der Browser-Leiste. <meta> loest kein var() auf.
+                  const sync = t => {
+                      const m = document.querySelector('meta[name="theme-color"]');
+                      if (m) m.setAttribute('content', t === 'light' ? '#f6f7fc' : '#2B2E3B');
                   };
-
-                  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-                  // MD3 Expressive circular reveal from the toggle button.
-                  if (!document.startViewTransition || reduce) { apply(); return; }
-
-                  const r = this.elements.themeToggle.getBoundingClientRect();
-                  const x = r.left + r.width / 2;
-                  const y = r.top + r.height / 2;
-                  const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-                  const root = document.documentElement;
-                  root.style.setProperty('--r-x', x + 'px');
-                  root.style.setProperty('--r-y', y + 'px');
-                  root.style.setProperty('--r-end', end + 'px');
-                  root.classList.add('theme-anim');
-                  const t = document.startViewTransition(apply);
-                  t.finished.finally(() => root.classList.remove('theme-anim'));
-              }
-              
-              applyTheme(theme) {
-                  document.documentElement.setAttribute('data-theme', theme);
-                  if (this.elements.themeToggle) {
-                      this.// Icon only: icons.js is already a hard dependency of the shared nav bar.
-        elements.themeToggle.innerHTML = window.SHIcons
-          ? SHIcons.html(theme === 'dark' ? 'sun' : 'moon') : '';
-                  }
+                  window.addEventListener('sh-theme', e => sync(e.detail.theme));
+                  sync(document.documentElement.getAttribute('data-theme'));
               }
               
           }
