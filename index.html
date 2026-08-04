@@ -49,33 +49,40 @@
 <!-- Apple Touch Icons for iOS and Samsung fallback -->
 <!-- Samsung Browser S24 Ultra specific icons -->
 <!-- Standard sizes for broad compatibility -->
+<link rel="stylesheet" href="/shared/theme.css">
 <style>
+          /* Diese App führt alles durch eigene Tokens — deshalb genügt es, sie an
+             die geteilten zu hängen, statt Hunderte Regeln umzuschreiben. Jede
+             bestehende Regel liest damit die Werte der dB-Analyse, und es
+             entsteht KEIN Spezifitätskampf: geändert wird der Wert, nicht die
+             Regel, die ihn liest. Der frühere Override-Stapel war genau das
+             Gegenteil und ließ die Kopf-Platte dreimal durchrutschen. */
           :root {
-              /* Material Design 3 Expressive — dark, tonal, vibrant */
-              --background-dark: #121318;        /* surface */
-              --background-darker: #0c0e13;      /* container-lowest */
-              --card-background: #1c1d23;        /* surface-container */
-              --surface-high: #26272d;
-              --surface-highest: #303137;
-              --outline: #46474f;
-              --accent-blue: #b3c5ff;            /* primary (vibrant) */
-              --on-primary: #0a285a;             /* dark text ON the light primary */
-              --accent-green: #7ddfa6;
-              --on-secondary: #00391c;           /* dark text ON the light green */
-              --accent-red: #ffb4ab;
-              --on-danger: #690005;              /* dark text ON the light red */
-              --text-primary: #e4e2e9;           /* on-surface */
-              --text-secondary: #c5c6d0;         /* on-surface-variant */
-              --text-light: #c5c6d0;             /* alias used across markup */
+              --background-dark:   var(--sh-bg);
+              --background-darker: var(--sh-bg2);
+              --card-background:   var(--sh-surface);
+              --surface-high:      var(--sh-surface2);
+              --surface-highest:   var(--sh-surface2);
+              --outline:           var(--sh-outline);
+              --accent-blue:       var(--sh-primary);
+              --on-primary:        var(--sh-on-primary);
+              --accent-green:      var(--sh-ok);
+              --on-secondary:      var(--sh-on-ok);
+              --accent-red:        var(--sh-loud);
+              --on-danger:         var(--sh-on-loud);
+              --text-primary:      var(--sh-text);
+              --text-secondary:    var(--sh-text2);
+              --text-light:        var(--sh-text2);
               --ease-spring: linear(0,0.009 1.2%,0.035 2.5%,0.158 6%,0.793 18.4%,0.984 23%,1.07 27%,1.104 31.5%,1.103 35%,1.07 41%,1.013 50%,0.991 57%,0.998 75%,1);
-              --ease-emph: cubic-bezier(0.2,0,0,1);
+              --ease-emph:         var(--sh-ease);
 
-              /* Schatten */
-              --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
-              --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
-              --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+              /* Höhe entsteht über Kontur und Flächenton, nicht über Schatten —
+                 die vierstufige Schattenskala wird deshalb stillgelegt statt in
+                 jeder Regel einzeln entfernt. */
+              --shadow-sm: none;
+              --shadow:    none;
+              --shadow-lg: none;
 
-              /* Abstände */
               --spacing-1: 0.25rem;
               --spacing-2: 0.5rem;
               --spacing-3: 0.75rem;
@@ -85,38 +92,18 @@
               --spacing-12: 3rem;
               --spacing-16: 4rem;
 
-              /* Rundungen — MD3 shape scale */
-              --radius-sm: 0.75rem;
-              --radius: 1rem;
-              --radius-lg: 1.5rem;
-              --radius-xl: 1.75rem;
+              /* Ein Radius statt vier Stufen. */
+              --radius-sm: var(--sh-radius-sm);
+              --radius:    var(--sh-radius);
+              --radius-lg: var(--sh-radius);
+              --radius-xl: var(--sh-radius);
 
-              /* Typografie */
-              --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+              --font-family: var(--sh-font);
           }
-
-          /* Light Theme */
-          [data-theme="light"] {
-              --background-dark: #f8fafc;
-              --background-darker: #f1f5f9;
-              --card-background: #ffffff;
-              --surface-high: #e2e8f0;
-              --surface-highest: #cbd5e1;
-              --outline: #cbd5e1;
-              --accent-blue: #3b82f6;
-              --on-primary: #ffffff;
-              --accent-green: #10b981;
-              --on-secondary: #ffffff;
-              --accent-red: #ef4444;
-              --on-danger: #ffffff;
-              --text-primary: #1f2937;
-              --text-secondary: #6b7280;
-              --text-light: #6b7280;
-              
-              --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-              --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-              --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-          }
+          /* Der eigene Hell-Block ist entfallen: shared/theme.css kippt die
+             --sh-*-Tokens unter [data-theme="light"], und da die Tokens dieser
+             App darauf zeigen, kippt sie automatisch mit. Eine zweite Palette
+             zu pflegen hieß nur, sie irgendwann auseinanderlaufen zu lassen. */
 
           * {
               margin: 0;
@@ -1005,194 +992,102 @@ html.theme-anim::view-transition-new(root){
   .message, .toggle-switch::after, .power-button.on::after, .stat-value{ transition:none!important; animation:none!important; }
 }
 
-/* Roboto Flex — die Schrift der dB-Analyse, selbst gehostet unter /shared/.
-   Diese App lädt von dort ohnehin schon icons.js und nav.js, die Abhängigkeit
-   ist also nicht neu. Beim Direktaufruf auf Port 5001 (an nginx vorbei) fehlt
-   /shared/ — dann greift der System-Stack dahinter, wie bei der Nav-Leiste. */
-@font-face{
-  font-family:'Roboto Flex';
-  src:url('/shared/fonts/RobotoFlex.woff2') format('woff2-variations');
-  font-weight:100 1000; font-stretch:25% 151%; font-display:swap;
-}
-:root{ --font-family: "Roboto Flex", Roboto, system-ui, -apple-system, sans-serif; }
+/* =============================================================================
+   Angleichung an die dB-Analyse — nur noch STRUKTUR.
+   Farben, Radien, Schatten und Schrift laufen über die Token-Verkettung oben
+   und shared/theme.css; hier steht ausschließlich, was sich in Maß, Abstand
+   und Komponentenform unterscheidet. Alles an dieser App gemessen, nicht
+   geschätzt: Inhaltsspalte 1152 statt 1200 px, Kartenabstand 24 statt 16 px,
+   Überschrift 16 statt 2,4 px Abstand nach unten, Zeilenhöhe 1,6 statt normal.
+   ============================================================================= */
 
-/* ==========================================================================
-   dB-Analyse-Formsprache (2026-08-04)
-   --------------------------------------------------------------------------
-   Die Farben waren schon deckungsgleich — beide Apps kamen aus demselben
-   MD3-Expressive-Sweep, Hintergrund/Surface/Primary/Text sind Zeichen für
-   Zeichen dieselben Hex-Werte. Was die dB-Analyse anders macht, ist die FORM:
+/* Seite trägt den dunkelsten Ton, nicht den Flächenton. */
+body{ background-color: var(--sh-bg2); line-height: normal; padding-top: 0; }
 
-     · ein Radius (28px) statt einer vierstufigen Skala
-     · Höhe über Kontur + Flächenton, nicht über Schlagschatten
-     · flacher, dunkelster Seitenhintergrund statt einer helleren Fläche
-     · Kartentitel im Textton, klein und fest — nicht groß und akzentblau
-     · Kennzahlen groß und tabellarisch, Label klein und in Versalien
-     · Bedienelemente als Pillen (999px), nicht als Rechtecke
-     · schmalerer Satzspiegel (1200 statt 1400), damit Zeilen lesbar bleiben
+/* Satzspiegel: 1200 px OHNE Innenabstand. Mit 24 px Polster blieben 1152 px
+   Inhalt — 48 px schmaler als die Referenz und um 24 px nach innen versetzt.
+   Das seitliche Polster sitzt am body, wie drüben. */
+.container{ max-width: var(--sh-measure); padding-left: 0; padding-right: 0;
+            padding-top: 0; padding-bottom: var(--sh-pad-bottom); }
 
-   Bewusst nur CSS: Markup und JS bleiben unangetastet, damit kein Handler und
-   keine ID bricht. Und alles über Yamahas EIGENE Tokens formuliert, nicht über
-   die Hex-Werte der dB-Analyse — sonst wäre das helle Theme dieser App tot.
-   ========================================================================== */
-
-:root{
-  --dbx-radius: 28px;          /* der eine Radius der dB-Analyse */
-  --dbx-radius-sm: 16px;       /* nur Eingabefelder, wie dort */
-}
-
-/* Seite: flacher, dunkelster Ton — die dB-Analyse hat ihren Radialverlauf aus
-   genau dem Grund aufgegeben, aus dem er hier auffällt: er las sich als zwei
-   verschiedene Hintergründe. */
-body{ background-color: var(--background-darker); }
-
-.container{ max-width: 1200px; }
-
-/* Kopf: kein abgesetzter Sticky-Balken, sondern Teil der Seite. Der Titel trägt
-   die Display-Größe der dB-Analyse (clamp + 800 + negatives Tracking). */
-/* Auf KLASSENEBENE, nicht auf Elementebene. `.header` (0-1-0) schlägt ein
-   blankes `header` (0-0-1), und `.header h1` schlägt `header h1` — die erste
-   Fassung dieser Regeln lief deshalb ins Leere: Schatten, Sticky und Polster
-   blieben stehen, nur max-width/margin kamen durch (die stehen in `.header`
-   nicht drin). Sichtbar war das als „Platte" unter dem Titel: der Schatten
-   `0 4px 6px -1px rgba(0,0,0,.3)` zeichnete eine Kante quer über die Seite. */
+/* Kopf auf KLASSENEBENE: `.header` schlägt ein blankes `header`. */
 header, .header{
-  background-color: transparent;
-  box-shadow: none;
-  position: static;
-  /* Derselbe Satzspiegel wie .container: der Kopf ist dessen Geschwister, kein
-     Kind, und lief voll ausgestellt — bei 1906 px stand der Titel 345 px links
-     neben der Inhaltsspalte. In der dB-Analyse liegt der Kopf innerhalb von
-     .wrap und erbt das Maß umsonst. */
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-6) var(--spacing-6) var(--spacing-2);
+  background-color: transparent; box-shadow: none; position: static;
+  max-width: var(--sh-measure); margin: 0 auto;
+  padding: var(--sh-pad-top) 0 var(--sh-gap-lg);
 }
+/* Größe/Gewicht müssen HIER stehen, nicht nur in theme.css: dessen
+   Element-Grundstil `h1{}` verliert gegen das app-eigene `.header h1`
+   (0-1-1 gegen 0-0-1). Die Grundstile im geteilten Blatt greifen nur dort,
+   wo eine App nichts Eigenes definiert. */
 header h1, .header h1{
-  font-size: clamp(1.85rem, 5vw, 2.55rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  text-align: left;
-  margin-bottom: 0;
+  font-size: clamp(1.85rem,5vw,2.55rem); font-weight: 800;
+  letter-spacing: -.03em; line-height: 1.05;
+  text-align: left; margin-bottom: 0;
 }
-/* Unterzeile wie drüben: gedämpft, klein, dicht unter dem Titel. */
-.header .sub{ color: var(--text-secondary); font-size: .9rem; margin-top: .35rem; }
-/* Der Kopf richtet oben aus, sobald darunter eine zweite Zeile steht —
-   sonst zöge der Theme-Schalter auf die Mitte des zweizeiligen Blocks. */
-.header > div{ align-items: flex-start !important; }
+.header .sub{ color: var(--sh-text2); font-size: .9rem; margin-top: .35rem; }
+.header > div{ align-items: flex-start !important; margin-bottom: 0 !important; }
 
-/* Karten: ein Radius, Kontur statt Schatten. */
-.card{
-  border-radius: var(--dbx-radius);
-  box-shadow: none;
-  border: 1px solid var(--outline);
-  padding: 1.15rem 1.2rem 1rem;
+/* Karten: Abstand wie zwischen den Abschnitten drüben, Überschrift dicht. */
+.card{ padding: var(--sh-card-pad); margin-bottom: var(--sh-gap-lg); }
+h2, .card h2{
+  font-size: 1.05rem; font-weight: 750; letter-spacing: -.01em;
+  color: var(--sh-text); margin-bottom: var(--sh-gap);
 }
-.card h2{
-  font-size: 1.05rem;
-  font-weight: 750;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-4);
-}
-.card h3{ font-size: .95rem; font-weight: 700; color: var(--text-secondary); }
+h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
 
-/* Kennzahl-Kacheln: Flächenton wie die Karte, große tabellarische Zahl,
-   Label klein in Versalien. Linksbündig — zentrierte Zahlen tanzen, sobald
-   sich die Stellenzahl ändert. */
+/* Kennzahl-Kacheln: linksbündig, Zahl groß und tabellarisch, Label in
+   Versalien — zentriert tanzt eine Zahl, sobald sich die Stellenzahl ändert. */
+.stats-grid{ gap: var(--sh-gap); margin-bottom: var(--sh-gap-lg); }
 .stat-card{
-  background: var(--card-background);
-  border: 1px solid var(--outline);
-  border-radius: var(--dbx-radius);
-  padding: 1.1rem 1.15rem;
-  text-align: left;
-  min-height: 112px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  background: var(--sh-surface); border: 1px solid var(--sh-outline);
+  padding: var(--sh-tile-pad); text-align: left; min-height: 112px;
+  display: flex; flex-direction: column; justify-content: center;
 }
-.stat-value{
-  font-size: clamp(1.65rem, 4vw, 2.25rem);
-  font-weight: 800;
-  line-height: 1.05;
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-}
-.stat-label{
-  font-size: .76rem;
-  font-weight: 650;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-top: .35rem;
-}
+.stat-value{ font-size: clamp(1.65rem,4vw,2.25rem); font-weight: 800; line-height: 1.05;
+             color: var(--sh-text); font-variant-numeric: tabular-nums; }
+.stat-label{ font-size: .76rem; font-weight: 650; letter-spacing: .04em;
+             text-transform: uppercase; color: var(--sh-text2); margin-top: .35rem; }
 
 /* Bedienelemente als Pillen. */
-.btn{
-  border-radius: 999px;
-  font-weight: 800;
-  font-size: .82rem;
-  letter-spacing: .02em;
-  transition: all .22s var(--ease-emph);
-}
+.btn{ border-radius: var(--sh-pill); font-weight: 800; font-size: .82rem;
+      letter-spacing: .02em; transition: all var(--sh-dur) var(--sh-ease); }
 .btn-outline{
-  border: 1px solid var(--outline);
-  background: color-mix(in srgb, var(--text-primary) 4%, transparent);
-  color: var(--text-secondary);
+  border: 1px solid var(--sh-outline);
+  background: color-mix(in srgb, var(--sh-text) 4%, transparent);
+  color: var(--sh-text2);
 }
-.btn-outline:hover{
-  background: color-mix(in srgb, var(--accent-blue) 10%, transparent);
-  color: var(--text-primary);
-  border-color: var(--outline);
-}
-.btn-outline.active,
-.btn-outline[aria-pressed="true"]{
-  background: var(--accent-blue);
-  color: var(--on-primary);
-  border-color: transparent;
-  box-shadow: 0 0 14px color-mix(in srgb, var(--accent-blue) 45%, transparent);
+.btn-outline:hover{ background: color-mix(in srgb, var(--sh-primary) 10%, transparent);
+                    color: var(--sh-text); border-color: var(--sh-outline); }
+.btn-outline.active, .btn-outline[aria-pressed="true"]{
+  background: var(--sh-primary); color: var(--sh-on-primary); border-color: transparent;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--sh-primary) 45%, transparent);
 }
 .btn-sm{ padding: .38rem .85rem; font-size: .78rem; }
 
-/* Reiter: Pillen statt Unterstrich, wie die Zeitraum-Chips drüben. */
-/* Auch der Flächenton der Reiter-Leiste geht: drüben trägt die Chip-Reihe
-   keinen eigenen Grund, sonst steht ein Streifen hinter den Pillen. */
+/* Reiter als Pillen. Der gleitende 3px-Indikator war die Auszeichnung des
+   aktiven Reiters, solange Reiter Unterstriche hatten; unter einer gefüllten
+   Pille ist er ein zweiter, widersprüchlicher Marker. Er bleibt im DOM — das
+   JS schreibt weiter darauf — und wird nur ausgeblendet. */
 .tabs, .main-tabs{ border-bottom: 0; gap: .3rem; flex-wrap: wrap;
-  background: transparent; box-shadow: none; padding-left: 0; padding-right: 0; }
-/* Der gleitende 3px-Indikator war die Auszeichnung des aktiven Reiters, solange
-   Reiter Unterstriche hatten. Unter einer gefüllten Pille ist er ein zweiter,
-   widersprüchlicher Marker — er bleibt im DOM (das JS schreibt weiter darauf,
-   ohne es zu merken) und wird nur ausgeblendet. */
+  background: transparent; box-shadow: none; padding-left: 0; padding-right: 0;
+  margin-bottom: var(--sh-gap-lg); }
 .tab-ind{ display: none; }
-/* .main-tabs setzt flex:1 auf seine Kinder — als Unterstrich-Reiter sinnvoll,
-   als Pille wird daraus ein 569px breites Oval. */
-.main-tab{ flex: 0 0 auto; }
+.main-tab{ flex: 0 0 auto; }   /* .main-tabs setzt flex:1 → 569px breite Pille */
 .tab, .main-tab{
-  border-bottom: 0;
-  border: 1px solid var(--outline);
-  border-radius: 999px;
-  padding: .32rem .8rem;
-  font-size: .8rem;
-  font-weight: 650;
-  color: var(--text-primary);
-  background: transparent;
+  border-bottom: 0; border: 1px solid var(--sh-outline); border-radius: var(--sh-pill);
+  padding: .32rem .8rem; font-size: .8rem; font-weight: 650;
+  color: var(--sh-text); background: transparent;
 }
 .tab.active, .main-tab.active{
-  background: var(--accent-blue);
-  color: var(--on-primary);
-  border-color: transparent;
+  background: var(--sh-primary); color: var(--sh-on-primary); border-color: transparent;
 }
 
-/* Eingaben: der kleinere Radius, eine Kontur statt zwei, Flächenton hoch. */
+/* Eingaben: kleinerer Radius, eine Kontur statt zwei, Flächenton hoch. */
 .form-select{
-  background-color: var(--surface-high);
-  border: 1px solid var(--outline);
-  border-radius: var(--dbx-radius-sm);
-  padding: .65rem .9rem;
-  font-size: .95rem;
+  background-color: var(--sh-surface2); border: 1px solid var(--sh-outline);
+  border-radius: var(--sh-radius-sm); padding: .65rem .9rem; font-size: .95rem;
 }
-
 </style>
       <script src="/shared/icons.js?v=1" defer></script>
     <script src="/shared/nav.js?v=7" defer></script>
