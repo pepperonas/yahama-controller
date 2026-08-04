@@ -1088,6 +1088,29 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
   background-color: var(--sh-surface2); border: 1px solid var(--sh-outline);
   border-radius: var(--sh-radius-sm); padding: .65rem .9rem; font-size: .95rem;
 }
+
+/* ---- Statusanzeige: Referenzform (siehe shared/theme.css .sh-live) --------
+   Punkt + Wort in einer Pille. Gruen = Verbindung steht. Die Textbreite ist
+   fixiert, weil das Wort wechselt und die paar Pixel Unterschied sonst
+   Nachbar-Elemente auf schmalen Breiten umbrechen lassen. */
+.status-indicator{
+  display:inline-flex; align-items:center; gap:.45rem;
+  color:var(--sh-text2); font-size:.82rem; font-weight:400;
+  padding:.4rem .7rem; border-radius:var(--sh-pill);
+  border:1px solid var(--sh-outline);
+  background:color-mix(in srgb, var(--sh-text) 3%, transparent);
+  min-width:0;
+}
+.status-indicator::before{
+  content:''; width:8px; height:8px; border-radius:50%;
+  background:var(--sh-muted); flex:0 0 auto;
+}
+.status-connected{ background:color-mix(in srgb, var(--sh-text) 3%, transparent);
+                   color:var(--sh-text2); }
+.status-connected::before{ background:var(--sh-ok); box-shadow:0 0 10px var(--sh-ok); }
+.status-disconnected{ background:color-mix(in srgb, var(--sh-text) 3%, transparent);
+                      color:var(--sh-text2); }
+.status-disconnected::before{ background:var(--sh-muted); box-shadow:none; }
 </style>
       <script src="/shared/icons.js?v=1" defer></script>
     <script src="/shared/nav.js?v=7" defer></script>
@@ -1098,7 +1121,10 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
       <header class="header">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-4);">
               <div><h1 style="margin: 0;"><span class="sh-icon" data-sh-icon="mixer" aria-hidden="true" style="vertical-align:-0.12em;margin-right:.4rem"></span> Yamaha RX-V577 Controller</h1><div class="sub">Professionelle AV-Receiver-Steuerung</div></div>
-              <button id="theme-toggle" class="btn btn-outline btn-sm" style="border: none; background: rgba(255,255,255,0.1); color: var(--text-primary);">
+              <!-- Kanonische Bauform aus shared/theme.css: derselbe Knopf wie in
+                 PowerHiFi und im Dashboard. Die Inline-Styles hier setzten
+                 Rahmen und Fläche eigenständig und liefen an jedem Token vorbei. -->
+            <button type="button" id="theme-toggle" class="sh-theme-btn" aria-label="Helles oder dunkles Design">
                   <span class="sh-icon" data-sh-icon="moon" aria-hidden="true"></span>
               </button>
           </div>
@@ -1506,7 +1532,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                       <span>Verbinden</span>
                   </button>
                   <span class="status-indicator status-disconnected" id="connection-status">
-                      Getrennt
+                      offline
                   </span>
               </div>
           </div>
@@ -1806,7 +1832,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                       // Connection successful
                       this.connected = true;
                       this.elements.connectionStatus.className = 'status-indicator status-connected';
-                      this.elements.connectionStatus.textContent = 'Verbunden';
+                      this.elements.connectionStatus.textContent = 'live';
 
                       // Show GUI immediately on successful connection
                       this.elements.stats.style.display = 'grid';
