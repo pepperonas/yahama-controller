@@ -1043,7 +1043,14 @@ header{
   background-color: transparent;
   box-shadow: none;
   position: static;
-  padding: var(--spacing-6) var(--spacing-4) var(--spacing-2);
+  /* Auf denselben Satzspiegel wie .container. Der header ist ein Geschwister
+     davon, kein Kind — voll ausgestellt stand der Titel bei 1906 px Breite
+     345 px links neben der Inhaltsspalte und der Theme-Schalter 346 px rechts
+     davon. In der dB-Analyse liegt der Kopf innerhalb von .wrap und fluchtet
+     deshalb von selbst; hier muss das Maß nachgereicht werden. */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-6) var(--spacing-6) var(--spacing-2);
 }
 header h1{
   font-size: clamp(1.85rem, 5vw, 2.55rem);
