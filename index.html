@@ -1112,8 +1112,12 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
 .status-disconnected{ background:color-mix(in srgb, var(--sh-text) 3%, transparent);
                       color:var(--sh-text2); }
 .status-disconnected::before{ background:var(--sh-muted); box-shadow:none; }
+
+              /* Abstand zwischen Icon und Wort in Ueberschriften. .sh-icon aus
+                 icons.js bringt nur Groesse und Ausrichtung mit. */
+              h1 .sh-icon, h2 .sh-icon, h3 .sh-icon { margin-right: .4rem; }
 </style>
-      <script src="/shared/icons.js?v=4" defer></script>
+      <script src="/shared/icons.js?v=6" defer></script>
     <script src="/shared/nav.js?v=11" defer></script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1121,7 +1125,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
   <body>
       <header class="header">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-4);">
-              <div><h1 style="margin: 0;"><span class="sh-icon" data-sh-icon="mixer" aria-hidden="true" style="vertical-align:-0.12em;margin-right:.4rem"></span> Yamaha RX-V577 Controller</h1><div class="sub">Professionelle AV-Receiver-Steuerung</div></div>
+              <div><h1 style="margin: 0;"><span class="sh-icon" data-sh-icon="yamaha" aria-hidden="true" style="vertical-align:-0.12em;margin-right:.4rem"></span> Yamaha RX-V577 Controller</h1><div class="sub">Professionelle AV-Receiver-Steuerung</div></div>
           </div>
       </header>
 
@@ -1202,7 +1206,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                                   <span class="loud-track"><span class="loud-thumb"></span></span>
                               </label>
                               <label for="volume-extended" class="loud-label">
-                                  <span class="loud-icon sh-icon" data-sh-icon="speaker" aria-hidden="true"></span>
+                                  <span class="loud-icon sh-icon" data-sh-icon="volume" aria-hidden="true"></span>
                                   <span class="loud-text">Volle Lautstärke freischalten<span class="loud-range"> (-20 dB bis +16 dB)</span></span>
                               </label>
                               <span class="loud-badge" aria-hidden="true"><span class="sh-icon" data-sh-icon="warning" aria-hidden="true" style="vertical-align:-0.1em;margin-right:.25rem"></span> MAX</span>
@@ -1234,7 +1238,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                           <label class="toggle-label">Extra Bass</label>
                       </div>
                       <div>
-                          <h3>Bass Control</h3>
+                          <h3><span class="sh-icon" data-sh-icon="bass" aria-hidden="true"></span>Bass Control</h3>
                           <div class="slider-container">
                               <div class="slider-label">
                                   <span>Bass</span>
@@ -1244,7 +1248,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                           </div>
                       </div>
                       <div>
-                          <h3>Treble Control</h3>
+                          <h3><span class="sh-icon" data-sh-icon="note" aria-hidden="true"></span>Treble Control</h3>
                           <div class="slider-container">
                               <div class="slider-label">
                                   <span>Treble</span>
@@ -1273,7 +1277,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                   <h2>DSP & Surround Sound</h2>
                   <div class="grid grid-2">
                       <div>
-                          <h3>DSP Programm</h3>
+                          <h3><span class="sh-icon" data-sh-icon="music" aria-hidden="true"></span>DSP Programm</h3>
                           <select class="form-select" id="dsp-mode">
                               <option value="Straight">Straight (Ohne DSP)</option>
                               <option value="Surround Decoder">Surround Decoder</option>
@@ -1293,7 +1297,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                           </select>
                       </div>
                       <div>
-                          <h3>Dialogue Level</h3>
+                          <h3><span class="sh-icon" data-sh-icon="wave" aria-hidden="true"></span>Dialogue Level</h3>
                           <div class="slider-container">
                               <div class="slider-label">
                                   <span>Dialog Verstärkung</span>
@@ -1355,21 +1359,21 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                   <h2>Lautsprecher-Konfiguration</h2>
                   <div class="grid grid-3">
                       <div>
-                          <h3>Subwoofer</h3>
+                          <h3><span class="sh-icon" data-sh-icon="drum" aria-hidden="true"></span>Subwoofer</h3>
                           <div class="stat-card">
                               <div class="stat-value" id="subwoofer-value">0 dB</div>
                               <div class="stat-label">Subwoofer Level (YPAO)</div>
                           </div>
                       </div>
                       <div>
-                          <h3>Center Lautsprecher</h3>
+                          <h3><span class="sh-icon" data-sh-icon="target" aria-hidden="true"></span>Center Lautsprecher</h3>
                           <div class="stat-card">
                               <div class="stat-value" id="center-value">0 dB</div>
                               <div class="stat-label">Center Level (YPAO)</div>
                           </div>
                       </div>
                       <div>
-                          <h3>Surround Level</h3>
+                          <h3><span class="sh-icon" data-sh-icon="burst" aria-hidden="true"></span>Surround Level</h3>
                           <div class="stat-card">
                               <div class="stat-value" id="surround-value">0 dB</div>
                               <div class="stat-label">Surround Level (YPAO)</div>
@@ -1383,14 +1387,14 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                   <h2>Audio-Einstellungen (Anzeige)</h2>
                   <div class="grid grid-2">
                       <div>
-                          <h3>Dynamic Range Control</h3>
+                          <h3><span class="sh-icon" data-sh-icon="balance" aria-hidden="true"></span>Dynamic Range Control</h3>
                           <div class="stat-card">
                               <div class="stat-value" id="drc-value">Aus</div>
                               <div class="stat-label">DRC Status (YPAO)</div>
                           </div>
                       </div>
                       <div>
-                          <h3>Lip Sync Delay</h3>
+                          <h3><span class="sh-icon" data-sh-icon="clock" aria-hidden="true"></span>Lip Sync Delay</h3>
                           <div class="stat-card">
                               <div class="stat-value" id="lipsync-value">0 ms</div>
                               <div class="stat-label">Audio Delay (YPAO)</div>
@@ -1423,7 +1427,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                   <h2>HDMI-Einstellungen</h2>
                   <div class="grid grid-2">
                       <div>
-                          <h3>HDMI Audio Format</h3>
+                          <h3><span class="sh-icon" data-sh-icon="disc" aria-hidden="true"></span>HDMI Audio Format</h3>
                           <select class="form-select" id="hdmi-audio-format">
                               <option value="PCM">PCM</option>
                               <option value="DTS">DTS</option>
@@ -1432,7 +1436,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                           </select>
                       </div>
                       <div>
-                          <h3>HDMI Control</h3>
+                          <h3><span class="sh-icon" data-sh-icon="link" aria-hidden="true"></span>HDMI Control</h3>
                           <select class="form-select" id="hdmi-control">
                               <option value="Off">Aus</option>
                               <option value="On">Ein</option>
@@ -1447,7 +1451,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                   <h2>Sleep Timer</h2>
                   <div class="grid grid-2">
                       <div>
-                          <h3>Ausschalten nach</h3>
+                          <h3><span class="sh-icon" data-sh-icon="sleep" aria-hidden="true"></span>Ausschalten nach</h3>
                           <select class="form-select" id="sleep-timer">
                               <option value="0">Aus</option>
                               <option value="30">30 Minuten</option>
@@ -1515,7 +1519,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
     <div style="max-width: 1400px; margin: 0 auto; padding: 0 var(--spacing-6); margin-top: var(--spacing-4);">
           <div class="card" id="connection-card">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <h3 style="margin: 0; font-size: 1rem;">Verbindung</h3>
+                  <h3 style="margin: 0; font-size: 1rem;"><span class="sh-icon" data-sh-icon="globe" aria-hidden="true"></span>Verbindung</h3>
                   <button class="btn btn-sm" id="toggle-connection" style="background: transparent; border: none; color: var(--text-light); font-size: 1.2rem; padding: 0.25rem 0.5rem;">
                       <span id="toggle-icon">▼</span>
                   </button>
