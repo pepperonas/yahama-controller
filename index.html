@@ -1131,7 +1131,7 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
 
       <div class="container">
           <!-- Statistics -->
-          <div class="stats-grid" id="stats" style="display: none;">
+          <div class="stats-grid" id="stats" style="display: grid;">
               <div class="stat-card">
                   <div class="stat-value" id="current-volume">-40</div>
                   <div class="stat-label">Lautstärke (dB)</div>
@@ -1151,19 +1151,19 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
           </div>
 
           <!-- Main Tabs -->
-          <div class="main-tabs" id="main-tabs" style="display: none;">
+          <div class="main-tabs" id="main-tabs" style="display: flex;">
               <button class="main-tab active" data-tab="basic">Grundsteuerung</button>
               <button class="main-tab" data-tab="system">System Info</button>
           </div>
 
           <!-- Zone Tabs -->
-          <div class="tabs" id="zone-tabs" style="display: none;">
+          <div class="tabs" id="zone-tabs" style="display: flex;">
               <button class="tab active" data-zone="Main_Zone">Hauptzone</button>
               <button class="tab" data-zone="Zone_2">Zone 2</button>
           </div>
 
           <!-- Tab Contents -->
-          <div id="controls" style="display: none;">
+          <div id="controls" style="display: block;">
               <!-- Basic Controls Tab -->
               <div class="tab-content active" id="basic-tab">
               <!-- Basic Controls -->
@@ -1521,10 +1521,10 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
               <div style="display: flex; justify-content: space-between; align-items: center;">
                   <h3 style="margin: 0; font-size: 1rem;"><span class="sh-icon" data-sh-icon="globe" aria-hidden="true"></span>Verbindung</h3>
                   <button class="btn btn-sm" id="toggle-connection" style="background: transparent; border: none; color: var(--text-light); font-size: 1.2rem; padding: 0.25rem 0.5rem;">
-                      <span id="toggle-icon">▼</span>
+                      <span id="toggle-icon" class="collapsed">▼</span>
                   </button>
               </div>
-              <div class="connection-panel" id="connection-panel" style="margin-top: var(--spacing-3);">
+              <div class="connection-panel collapsed" id="connection-panel" style="margin-top: var(--spacing-3);">
                   <label class="form-label">Receiver IP:</label>
                   <input type="text" id="receiver-ip" class="form-input" placeholder="192.168.1.100" value="">
                   <button class="btn btn-primary" id="connect-btn">
@@ -1778,27 +1778,36 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
               }
 
               async loadSavedIP() {
+                  // Optimistisches Laden (2026-08-13): die GUI ist bereits
+                  // sichtbar — hier wird nur noch SOFORT verbunden (die alte
+                  // 1-s-Kunstpause ist gestrichen). Erst wenn binnen ~2 s
+                  // keine Antwort kommt, zeigt connect() Setup + Fehler.
+                  this.elements.connectionStatus.textContent = 'verbinde …';
                   try {
                       // First check server for saved IP
-                      const response = await fetch('api/health');
+                      const response = await fetch('api/health',
+                          { signal: AbortSignal.timeout(2000) });
                       const data = await response.json();
-                      
+
                       if (data.receiverIP) {
                           this.elements.ipInput.value = data.receiverIP;
-                          // Auto-connect if IP is saved on server
-                          setTimeout(() => this.connect(), 1000);
+                          this.connect();
                           return;
                       }
                   } catch (error) {
                       console.log('No saved IP on server, checking localStorage');
                   }
-                  
+
                   // Fallback to localStorage
                   const savedIP = localStorage.getItem('yamaha-receiver-ip');
                   if (savedIP) {
                       this.elements.ipInput.value = savedIP;
-                      // Auto-connect if IP is saved in localStorage
-                      setTimeout(() => this.connect(), 1000);
+                      this.connect();
+                  } else {
+                      // Keine IP bekannt -> DAS ist der Setup-Fall: Panel auf
+                      this.elements.connectionStatus.textContent = 'offline';
+                      this.elements.connectionPanel.classList.remove('collapsed');
+                      this.elements.toggleIcon.classList.remove('collapsed');
                   }
               }
 
@@ -1839,19 +1848,21 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                       this.startStatusPolling();
 
                   } catch (error) {
-                      // Connection failed
+                      // Verbindung fehlgeschlagen (>2 s keine Antwort oder
+                      // Fehler): GUI BLEIBT sichtbar (optimistisch, 2026-08-13)
+                      // — nur Setup-Panel auf + Fehler zeigen.
                       console.error('Connection failed:', error.message);
-                      console.error('Full error:', error);
                       this.connected = false;
                       this.elements.connectionStatus.className = 'status-indicator status-disconnected';
                       this.elements.connectionStatus.textContent = 'Verbindung fehlgeschlagen';
 
-                      this.elements.stats.style.display = 'none';
-                      this.elements.mainTabs.style.display = 'none';
-                      this.elements.zoneTabs.style.display = 'none';
-                      this.elements.controls.style.display = 'none';
+                      this.elements.connectionPanel.classList.remove('collapsed');
+                      this.elements.toggleIcon.classList.remove('collapsed');
 
-                      this.showMessage(`Verbindung fehlgeschlagen: ${error.message}`, 'error');
+                      const hint = (error.name === 'TimeoutError' || error.name === 'AbortError')
+                          ? 'keine Antwort (2 s) — Receiver aus/nicht erreichbar?'
+                          : error.message;
+                      this.showMessage(`Verbindung fehlgeschlagen: ${hint}`, 'error');
                   } finally {
                       this.elements.connectBtn.disabled = false;
                       this.elements.connectBtn.innerHTML = '<span>Verbinden</span>';
@@ -1862,7 +1873,8 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                   const response = await fetch('api/set-receiver-ip', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ ip })
+                      body: JSON.stringify({ ip }),
+                      signal: AbortSignal.timeout(2000)
                   });
 
                   if (!response.ok) {
@@ -1881,10 +1893,14 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                   const url = 'api/receiver/YamahaRemoteControl/ctrl';
 
                   try {
+                      // 2-s-Budget beim Verbinden (danach Setup/Fehler statt
+                      // Haengen — der ausgeschaltete Receiver liess den Fetch
+                      // sonst minutenlang offen); normale Kommandos 8 s.
                       const response = await fetch(url, {
                           method: 'POST',
                           headers: { 'Content-Type': 'text/xml' },
-                          body: xml
+                          body: xml,
+                          signal: AbortSignal.timeout(isConnectionAttempt ? 2000 : 8000)
                       });
 
                       if (!response.ok) {
