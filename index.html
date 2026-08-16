@@ -1841,7 +1841,11 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                       this.elements.zoneTabs.style.display = 'flex';
                       this.elements.controls.style.display = 'block';
 
-                      this.showMessage('Erfolgreich verbunden', 'success');
+                      // Keine Erfolgsmeldung: der Zustand steht bereits als
+                      // "live" in der Statusanzeige, das Panel klappt zu und
+                      // die Bedienoberflaeche erscheint. Eine Einblendung
+                      // obendrauf meldet nur, was ohnehin zu sehen ist
+                      // (Nutzerwunsch 2026-08-16). Fehler melden weiterhin.
                       // Auto-collapse connection panel
                       this.elements.connectionPanel.classList.add("collapsed");
                       this.elements.toggleIcon.classList.add("collapsed");
