@@ -411,7 +411,7 @@
 
           .tab:hover {
               color: var(--text-primary);
-              background-color: rgba(255, 255, 255, 0.05);
+              background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
           }
 
           .tab.active {
@@ -432,7 +432,7 @@
               width: 80px;
               height: 80px;
               border-radius: 50%;
-              border: 3px solid rgba(255, 255, 255, 0.3);
+              border: 3px solid color-mix(in srgb, var(--text-primary) 32%, transparent);
               background: var(--background-darker);
               cursor: pointer;
               display: flex;
@@ -566,7 +566,7 @@
               display: inline-block;
               width: 20px;
               height: 20px;
-              border: 3px solid rgba(255, 255, 255, 0.3);
+              border: 3px solid color-mix(in srgb, var(--text-primary) 32%, transparent);
               border-radius: 50%;
               border-top-color: var(--accent-blue);
               animation: spin 1s ease-in-out infinite;
@@ -670,7 +670,7 @@
               border-radius: 16px;
               cursor: pointer;
               transition: background 0.3s ease;
-              border: 2px solid rgba(255, 255, 255, 0.2);
+              border: 2px solid color-mix(in srgb, var(--text-primary) 22%, transparent);
           }
 
           .toggle-switch.active {
@@ -729,7 +729,7 @@
 
           .main-tab:hover {
               color: var(--text-primary);
-              background-color: rgba(255, 255, 255, 0.05);
+              background-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
           }
 
           .main-tab.active {
@@ -1117,8 +1117,8 @@ h3, .card h3{ font-size: .95rem; font-weight: 700; color: var(--sh-text2); }
                  icons.js bringt nur Groesse und Ausrichtung mit. */
               h1 .sh-icon, h2 .sh-icon, h3 .sh-icon { margin-right: .4rem; }
 </style>
-      <script src="/shared/icons.js?v=8" defer></script>
-    <script src="/shared/nav.js?v=20" defer blocking="render"></script>
+      <script src="/shared/icons.js?v=9" defer></script>
+    <script src="/shared/nav.js?v=21" defer blocking="render"></script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
