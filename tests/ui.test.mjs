@@ -88,6 +88,10 @@ test('die 4 horizontalen Slider tragen sh-slider; die 7 vertikalen EQ-Fader blei
 test('kein eigenes Slider-Skinning mehr', () => {
   assert.ok(!CSS_PUR.includes('.slider::-webkit-slider-thumb'));
   assert.ok(!CSS_PUR.includes('.slider::-moz-range-thumb'));
+  // ⚠️ Dieser Element-Selektor entkam beim Umbau dem \.slider-Klassenmuster
+  // und malte die ganze 26-px-Wanne surface2 (Feldbefund 2026-08-30):
+  assert.ok(!/input\.slider\s*\{[^}]*background/.test(CSS_PUR),
+    'input.slider-Hintergrund uebermalt die sh-Wanne');
 });
 
 // ---- Tabs -------------------------------------------------------------------
